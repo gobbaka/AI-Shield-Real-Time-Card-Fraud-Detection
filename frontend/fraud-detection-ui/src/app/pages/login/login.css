@@ -108,50 +108,83 @@
 /* LEFT: BRAND SHOWCASE SECTION                             */
 /* ======================================================== */
 
+/* ======================================================== */
+/* LEFT: BRAND SHOWCASE & TRANSACTION SECURITY STORY        */
+/* ======================================================== */
+
 .brand-showcase {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  padding: 16px 24px;
+  gap: 28px;
+  padding: 16px 20px;
 }
 
 .brand-header {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
-.shield-logo-wrap {
+/* Prominent Hero Shield Badge with Sonar Rings & Radar Beam */
+.shield-hero-badge {
   position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 30% 30%, #0c2847, #030d1a);
+  border: 1px solid rgba(56, 189, 248, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: shieldBreath 4s ease-in-out infinite;
+  box-shadow: 0 0 24px rgba(2, 132, 199, 0.35);
+  flex-shrink: 0;
+  overflow: visible;
 }
 
-@keyframes shieldBreath {
-  0%, 100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.3));
-  }
-  50% {
-    transform: scale(1.025);
-    filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.55));
-  }
-}
-
-.shield-glow {
+.shield-sonar-ring {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background: rgba(0, 240, 255, 0.4);
-  filter: blur(16px);
-  border-radius: 50%;
+  inset: -6px;
+  border-radius: 22px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  pointer-events: none;
+  animation: sonarPulse 3.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
-.shield-svg {
+.shield-sonar-ring.ring-2 {
+  animation-delay: 1.8s;
+}
+
+@keyframes sonarPulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+.shield-scanner-beam {
+  position: absolute;
+  inset: -1px;
+  border-radius: 18px;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(0, 240, 255, 0.45) 360deg);
+  animation: scannerRotate 4s linear infinite;
+  pointer-events: none;
+  mask-image: radial-gradient(circle, transparent 58%, black 62%);
+  -webkit-mask-image: radial-gradient(circle, transparent 58%, black 62%);
+}
+
+@keyframes scannerRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.shield-hero-svg {
   position: relative;
-  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
+  z-index: 2;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.6));
 }
 
 .brand-title-wrap {
@@ -160,100 +193,285 @@
   gap: 4px;
 }
 
-.brand-name {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  margin: 0;
-  background: linear-gradient(135deg, #ffffff 30%, #38bdf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.brand-tag {
+.brand-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
   color: #38bdf8;
   text-transform: uppercase;
 }
 
-.brand-hero {
+.live-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff;
+  animation: pulseDotSoft 2s ease-in-out infinite;
+}
+
+.brand-name {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #ffffff 40%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-hero-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 .hero-headline {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 800;
-  line-height: 1.22;
-  color: #f1f5f9;
+  line-height: 1.25;
+  color: #f8fafc;
   margin: 0;
-  letter-spacing: -0.8px;
+  letter-spacing: -0.6px;
+}
+
+.hero-gradient-text {
+  background: linear-gradient(135deg, #38bdf8, #00f0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-subtext {
-  font-size: 16px;
+  font-size: 14.5px;
   line-height: 1.6;
   color: #94a3b8;
   margin: 0;
-  max-width: 480px;
+  max-width: 500px;
 }
 
-/* Trust Indicators */
-.trust-indicators {
+/* ======================================================== */
+/* VISUAL TRANSACTION-SECURITY STORY CARD                  */
+/* ======================================================== */
+
+.transaction-story-card {
+  background: rgba(11, 19, 34, 0.82);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
+}
+
+.transaction-story-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+  opacity: 0.6;
+}
+
+.story-card-top {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.trust-item {
+.story-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.story-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+.story-telemetry {
+  font-family: 'Courier New', monospace, ui-monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4ade80;
+  letter-spacing: 0.5px;
+}
+
+.story-pipeline {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 14px 18px;
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(56, 189, 248, 0.12);
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.story-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  flex: 1;
+  transition: transform 200ms ease;
+}
+
+.story-node:hover {
+  transform: translateY(-2px);
+}
+
+.node-icon-box {
+  position: relative;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
-  backdrop-filter: blur(12px);
-  transition: all 0.25s ease;
-}
-
-.trust-item:hover {
-  background: rgba(15, 23, 42, 0.75);
-  border-color: rgba(56, 189, 248, 0.28);
-  transform: translateX(4px);
-}
-
-.trust-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: rgba(2, 132, 199, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #38bdf8;
-  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  transition: all 220ms ease;
 }
 
-.trust-text {
+.story-node:hover .node-icon-box {
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+}
+
+.node-step {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
+.node-glyph {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.node-details strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.node-details small {
+  display: block;
+  font-size: 10px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+/* Connecting Wires with Animated Data Pulses */
+.story-wire {
+  position: relative;
+  flex: 0 0 28px;
+  height: 2px;
+  margin-bottom: 24px;
+}
+
+.wire-track {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+
+.wire-pulse {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 10px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #38bdf8, #00f0ff);
+  box-shadow: 0 0 8px #00f0ff;
+  animation: wirePulseMove 2.4s ease-in-out infinite;
+}
+
+.wire-pulse.pulse-1 { animation-delay: 0s; }
+.wire-pulse.pulse-2 { animation-delay: 0.6s; }
+.wire-pulse.pulse-3 { animation-delay: 1.2s; }
+
+@keyframes wirePulseMove {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* Live Operational Telemetry Strip */
+.telemetry-metrics-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.metric-pill {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.trust-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #f8fafc;
+.metric-val {
+  font-family: 'Courier New', monospace, ui-monospace;
+  font-size: 15px;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: -0.2px;
 }
 
-.trust-desc {
-  font-size: 12px;
+.metric-lbl {
+  font-size: 11px;
   color: #94a3b8;
+  font-weight: 500;
+}
+
+.metric-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .brand-footer-badges {
@@ -263,7 +481,7 @@
   flex-wrap: wrap;
   font-size: 12px;
   color: #64748b;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .badge-item {
@@ -1049,8 +1267,8 @@
 @media (max-width: 960px) {
   .auth-container {
     grid-template-columns: 1fr;
-    max-width: 520px;
-    gap: 32px;
+    max-width: 580px;
+    gap: 36px;
   }
 
   .brand-showcase {
@@ -1064,15 +1282,43 @@
   }
 
   .hero-headline {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .hero-subtext {
     max-width: 100%;
+    font-size: 14px;
   }
 
-  .trust-indicators {
-    display: none; /* Keep mobile view clean and focused */
+  .transaction-story-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .story-wire {
+    flex: 0 0 14px;
+  }
+
+  .node-icon-box {
+    width: 38px;
+    height: 38px;
+  }
+
+  .node-glyph {
+    font-size: 15px;
+  }
+
+  .node-details strong {
+    font-size: 11px;
+  }
+
+  .node-details small {
+    font-size: 9px;
+  }
+
+  .telemetry-metrics-strip {
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .brand-footer-badges {
@@ -1090,13 +1336,49 @@
   }
 }
 
+@media (max-width: 580px) {
+  .story-pipeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .story-wire {
+    display: none;
+  }
+
+  .story-node {
+    flex-direction: row;
+    text-align: left;
+    gap: 10px;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .telemetry-metrics-strip {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .metric-val {
+    font-size: 13px;
+  }
+
+  .metric-lbl {
+    font-size: 9px;
+  }
+}
+
 @media (max-width: 480px) {
   .auth-page {
     padding: 16px 12px;
   }
 
   .brand-name {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   .hero-headline {

@@ -11,89 +11,153 @@
   <div class="auth-container">
 
     <!-- ======================================================== -->
-    <!-- LEFT / BRAND SECTION                                     -->
+    <!-- LEFT / HERO & TRANSACTION SECURITY STORY                 -->
     <!-- ======================================================== -->
     <section class="brand-showcase">
       
+      <!-- Brand Header with Prominent Shield Identity & Radar Pulse -->
       <div class="brand-header">
-        <div class="shield-logo-wrap">
-          <div class="shield-glow"></div>
-          <svg class="shield-svg" width="38" height="38" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L3 7V12C3 17.52 6.84 22.74 12 24C17.16 22.74 21 17.52 21 12V7L12 2Z" fill="url(#shieldGrad)" stroke="#38bdf8" stroke-width="1.5" stroke-linejoin="round"/>
-            <path d="M9 12L11 14L15 10" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <div class="shield-hero-badge">
+          <div class="shield-sonar-ring ring-1"></div>
+          <div class="shield-sonar-ring ring-2"></div>
+          <div class="shield-scanner-beam"></div>
+          <svg class="shield-hero-svg" width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L3 7V12C3 17.52 6.84 22.74 12 24C17.16 22.74 21 17.52 21 12V7L12 2Z" fill="url(#shieldHeroGrad)" stroke="#38bdf8" stroke-width="1.75" stroke-linejoin="round"/>
+            <path d="M8.5 12.2L10.8 14.5L15.5 9.5" stroke="#00f0ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
             <defs>
-              <linearGradient id="shieldGrad" x1="3" y1="2" x2="21" y2="24" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0f2b48" stop-opacity="0.9"/>
-                <stop offset="1" stop-color="#071526" stop-opacity="0.95"/>
+              <linearGradient id="shieldHeroGrad" x1="3" y1="2" x2="21" y2="24" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0e2a47" stop-opacity="0.95"/>
+                <stop offset="1" stop-color="#041224" stop-opacity="0.98"/>
               </linearGradient>
             </defs>
           </svg>
         </div>
         <div class="brand-title-wrap">
-          <h1 class="brand-name">AI Shield</h1>
-          <span class="brand-tag">ENTERPRISE SECURITY</span>
+          <div class="brand-eyebrow">
+            <span class="live-pulse-dot"></span>
+            ENTERPRISE FINANCIAL CYBERSECURITY
+          </div>
+          <h1 class="brand-name">AI SHIELD</h1>
         </div>
       </div>
 
-      <div class="brand-hero">
-        <h2 class="hero-headline">AI-Powered Card Fraud Protection</h2>
+      <!-- Core Purpose & Professional Description -->
+      <div class="brand-hero-content">
+        <h2 class="hero-headline">
+          Real-Time Card Fraud Detection <br>
+          <span class="hero-gradient-text">&amp; Step-Up Verification</span>
+        </h2>
         <p class="hero-subtext">
-          Protect every transaction with intelligent fraud detection and real-time verification.
+          AI Shield analyzes card transactions in real time using 30-dimensional behavioral profiling, ONNX ensemble machine learning, and automated step-up cryptographic challenges before fraudulent charges clear.
         </p>
       </div>
 
-      <!-- Trust Indicators -->
-      <div class="trust-indicators">
-        
-        <div class="trust-item">
-          <div class="trust-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <path d="M9 12l2 2 4-4"/>
-            </svg>
+      <!-- Visual Transaction-Security Story (Transaction -> AI -> Risk -> Protected) -->
+      <div class="transaction-story-card">
+        <div class="story-card-top">
+          <div class="story-label">
+            <span class="story-dot"></span>
+            TRANSACTION SECURITY ARCHITECTURE
           </div>
-          <div class="trust-text">
-            <span class="trust-title">AI Fraud Detection</span>
-            <span class="trust-desc">Ensemble Random Forest ML scoring in &lt;0.8ms</span>
-          </div>
+          <span class="story-telemetry">WIRE LATENCY: &lt; 12ms</span>
         </div>
 
-        <div class="trust-item">
-          <div class="trust-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
+        <div class="story-pipeline">
+          <!-- Stage 1: Card Transaction -->
+          <div class="story-node node-1">
+            <div class="node-icon-box">
+              <span class="node-step">01</span>
+              <span class="node-glyph">💳</span>
+            </div>
+            <div class="node-details">
+              <strong>Transaction</strong>
+              <small>POS &amp; Online Swipe</small>
+            </div>
           </div>
-          <div class="trust-text">
-            <span class="trust-title">Real-Time Alerts</span>
-            <span class="trust-desc">Instant geo-velocity anomaly detection</span>
+
+          <div class="story-wire">
+            <div class="wire-track"></div>
+            <div class="wire-pulse pulse-1"></div>
+          </div>
+
+          <!-- Stage 2: AI Analysis -->
+          <div class="story-node node-2">
+            <div class="node-icon-box">
+              <span class="node-step">02</span>
+              <span class="node-glyph">🧠</span>
+            </div>
+            <div class="node-details">
+              <strong>AI Analysis</strong>
+              <small>Features &amp; Velocity</small>
+            </div>
+          </div>
+
+          <div class="story-wire">
+            <div class="wire-track"></div>
+            <div class="wire-pulse pulse-2"></div>
+          </div>
+
+          <!-- Stage 3: Fraud Detection -->
+          <div class="story-node node-3">
+            <div class="node-icon-box">
+              <span class="node-step">03</span>
+              <span class="node-glyph">⚡</span>
+            </div>
+            <div class="node-details">
+              <strong>Fraud Detection</strong>
+              <small>ONNX ML Scoring</small>
+            </div>
+          </div>
+
+          <div class="story-wire">
+            <div class="wire-track"></div>
+            <div class="wire-pulse pulse-3"></div>
+          </div>
+
+          <!-- Stage 4: Secure Decision -->
+          <div class="story-node node-4">
+            <div class="node-icon-box">
+              <span class="node-step">04</span>
+              <span class="node-glyph">🛡️</span>
+            </div>
+            <div class="node-details">
+              <strong>Secure Decision</strong>
+              <small>Approve / Challenge</small>
+            </div>
           </div>
         </div>
-
-        <div class="trust-item">
-          <div class="trust-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </div>
-          <div class="trust-text">
-            <span class="trust-title">Multi-Factor Security</span>
-            <span class="trust-desc">Cryptographic 2FA OTP & FIDO2 WebAuthn</span>
-          </div>
-        </div>
-
       </div>
 
+      <!-- Live Operational Telemetry Strip -->
+      <div class="telemetry-metrics-strip">
+        <div class="metric-pill">
+          <span class="metric-val">&lt; 12ms</span>
+          <span class="metric-lbl">Inference Latency</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-pill">
+          <span class="metric-val">99.4%</span>
+          <span class="metric-lbl">Detection Accuracy</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-pill">
+          <span class="metric-val">FIDO2</span>
+          <span class="metric-lbl">Zero Raw Biometrics</span>
+        </div>
+      </div>
+
+      <!-- Compliance Badges -->
       <div class="brand-footer-badges">
         <span class="badge-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
           Bank-Grade 256-Bit TLS
         </span>
         <span class="badge-dot">•</span>
-        <span class="badge-item">Zero-Trust Architecture</span>
+        <span class="badge-item">Zero-Trust Boundary</span>
         <span class="badge-dot">•</span>
-        <span class="badge-item">PCI-DSS Compliant</span>
+        <span class="badge-item">PCI-DSS Aligned</span>
+        <span class="badge-dot">•</span>
+        <span class="badge-item">Real SMS 2FA</span>
       </div>
 
     </section>
@@ -191,10 +255,17 @@
             </div>
 
             <button type="submit" class="btn-primary-submit" [disabled]="authState === 'LOGIN_SUBMITTING'">
-              <span *ngIf="authState !== 'LOGIN_SUBMITTING'">Sign In & Continue</span>
+              <span *ngIf="authState !== 'LOGIN_SUBMITTING' && authState !== 'AUTHENTICATED'" class="btn-idle-content">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Sign In &amp; Authenticate
+              </span>
               <span *ngIf="authState === 'LOGIN_SUBMITTING'" class="btn-loading-content">
-                <svg class="spin-sm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
-                Signing you in...
+                <svg class="spin-sm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                Authenticating &amp; Security Check...
+              </span>
+              <span *ngIf="authState === 'AUTHENTICATED'" class="btn-loading-content">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Access Granted • Redirecting...
               </span>
             </button>
 
