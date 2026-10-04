@@ -325,7 +325,45 @@
                     </div>
                 </div>
 
-                <div *ngIf="txSuccessMessage" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 16px;">
+                <!-- AI Shield Real-Time Decision Pipeline State -->
+                <div class="ai-pipeline-processing" *ngIf="isProcessingTx" aria-live="polite">
+                    <div class="pipeline-header">
+                        <span class="pipeline-pulse"></span>
+                        <span class="pipeline-headline">AI SHIELD REAL-TIME SCORING PIPELINE</span>
+                        <span class="pipeline-clock">&lt;0.8ms INFERENCE</span>
+                    </div>
+                    <div class="pipeline-steps-flow">
+                        <div class="pipeline-step">
+                            <span class="step-num">01</span>
+                            <span class="step-text">TX Ingestion</span>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <span class="step-num">02</span>
+                            <span class="step-text">Features</span>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <span class="step-num">03</span>
+                            <span class="step-text">Rules + ONNX</span>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <span class="step-num">04</span>
+                            <span class="step-text">Risk Scored</span>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <span class="step-num">05</span>
+                            <span class="step-text">Verdict</span>
+                        </div>
+                    </div>
+                    <div class="pipeline-scanline-bar">
+                        <div class="scanline-beam"></div>
+                    </div>
+                </div>
+
+                <div *ngIf="txSuccessMessage" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; animation: modalPopIn 200ms ease both;">
                     {{ txSuccessMessage }}
                 </div>
 

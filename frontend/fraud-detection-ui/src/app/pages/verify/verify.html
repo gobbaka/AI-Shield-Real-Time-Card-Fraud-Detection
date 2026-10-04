@@ -57,19 +57,53 @@
                 </div>
             </div>
 
+            <!-- Verification Lifecycle Stepper -->
+            <div class="verify-stepper">
+                <div class="v-step done">
+                    <div class="v-dot">✓</div>
+                    <span>Flagged</span>
+                </div>
+                <div class="v-line done"></div>
+                <div class="v-step done">
+                    <div class="v-dot">✓</div>
+                    <span>Challenge</span>
+                </div>
+                <div class="v-line" [class.done]="actionCompleted"></div>
+                <div class="v-step" [class.active]="!actionCompleted" [class.done]="actionCompleted">
+                    <div class="v-dot">{{ actionCompleted ? '✓' : '3' }}</div>
+                    <span>Decision</span>
+                </div>
+                <div class="v-line" [class.done]="actionCompleted"></div>
+                <div class="v-step" [class.active]="actionCompleted" [class.success]="actionCompleted && isSuccess" [class.danger]="actionCompleted && !isSuccess">
+                    <div class="v-dot">{{ actionCompleted ? (isSuccess ? '✓' : '✕') : '4' }}</div>
+                    <span>{{ actionCompleted ? (isSuccess ? 'Authorized' : 'Blocked') : 'Verdict' }}</span>
+                </div>
+            </div>
+
             <!-- Action Prompt -->
-            <div class="action-prompt" *ngIf="!actionCompleted">
+            <div class="action-prompt" *ngIf="!actionCompleted && !isProcessing">
                 <h3>Did you authorize this transaction?</h3>
                 <p>If you made this purchase, click <strong>YES</strong> to authenticate with your device. If this was not you, click <strong>NO</strong> to instantly freeze your card and prevent unauthorized charges.</p>
             </div>
 
+            <!-- Biometric / Crypto verification in progress -->
+            <div class="biometric-scan-card" *ngIf="isProcessing">
+                <div class="bio-scanner-ring">
+                    <span class="bio-icon">🔐</span>
+                </div>
+                <div class="bio-scan-text">
+                    <strong>Cryptographic Challenge In Progress</strong>
+                    <p>{{ statusMessage }}</p>
+                </div>
+            </div>
+
             <!-- Processing / Completed Message -->
-            <div class="status-alert" *ngIf="statusMessage" [class.success]="isSuccess" [class.danger]="!isSuccess">
+            <div class="status-alert" *ngIf="statusMessage && !isProcessing" [class.success]="isSuccess" [class.danger]="!isSuccess" [class.alert-resolved-success]="isSuccess" [class.alert-resolved-danger]="!isSuccess">
                 {{ statusMessage }}
             </div>
 
             <!-- Action Buttons -->
-            <div class="action-buttons-group" *ngIf="!actionCompleted">
+            <div class="action-buttons-group" *ngIf="!actionCompleted && !isProcessing">
                 <button type="button" class="btn-authorize" (click)="authorizeTransaction()" [disabled]="isProcessing">
                     <span>🔐</span> YES, I AUTHORIZED IT
                 </button>
@@ -78,7 +112,14 @@
                 </button>
             </div>
 
-            <div *ngIf="actionCompleted" style="text-align: center; margin-top: 20px;">
+            <div *ngIf="actionCompleted" class="action-completed-banner" [class.banner-success]="isSuccess" [class.banner-danger]="!isSuccess">
+                <div class="resolution-title">
+                    <span class="res-icon">{{ isSuccess ? '🛡️' : '⛔' }}</span>
+                    <strong>{{ isSuccess ? 'Transaction Successfully Authorized' : 'Card Locked & Transaction Blocked' }}</strong>
+                </div>
+                <p class="res-desc">
+                    {{ isSuccess ? 'Your biometric challenge confirmed card ownership. The merchant charge was processed safely.' : 'Your fraud report has permanently halted this authorization and your card has been placed into frozen status.' }}
+                </p>
                 <button type="button" class="btn-return" (click)="backToDashboard()">Return to Dashboard</button>
             </div>
 

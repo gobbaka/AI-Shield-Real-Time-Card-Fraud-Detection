@@ -86,7 +86,7 @@
 
                 <tbody>
 
-                    <tr *ngFor="let alert of alerts">
+                    <tr *ngFor="let alert of alerts" [class.row-critical]="alert.riskScore >= 80">
 
                         <td><strong>{{ alert.id }}</strong></td>
 
@@ -139,7 +139,7 @@
 
         <!-- Investigation Case Dossier Modal -->
         <div class="investigation-modal-overlay" *ngIf="investigatingCase" style="position: fixed; inset: 0; background: rgba(15,23,42,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
-            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; width: 100%; max-width: 600px; padding: 24px; color: #fff; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
+            <div class="investigation-modal-card" style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; width: 100%; max-width: 600px; padding: 24px; color: #fff; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #334155; padding-bottom: 12px;">
                     <div>
                         <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #f87171; display: flex; align-items: center; gap: 8px;">
@@ -181,7 +181,7 @@
                     <textarea [(ngModel)]="investigationNotes" rows="2" style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 13px; outline: none;"></textarea>
                 </div>
 
-                <div *ngIf="actionFeedback" style="background: rgba(56,189,248,0.15); border: 1px solid #0284c7; color: #38bdf8; padding: 8px; border-radius: 6px; font-size: 12px; margin-bottom: 14px;">
+                <div *ngIf="actionFeedback" class="action-feedback-toast" style="background: rgba(56,189,248,0.15); border: 1px solid #0284c7; color: #38bdf8; padding: 8px; border-radius: 6px; font-size: 12px; margin-bottom: 14px;">
                     {{ actionFeedback }}
                 </div>
 

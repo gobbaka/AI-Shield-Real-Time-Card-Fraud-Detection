@@ -71,6 +71,14 @@
             </div>
           </div>
 
+          <!-- Frosted Lock Overlay when Card Frozen -->
+          <div class="card-frozen-overlay" *ngIf="card.status === 'BLOCKED'">
+            <div class="frozen-badge">
+              <span class="frozen-icon">🔒</span>
+              <span class="frozen-text">CARD FROZEN</span>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -134,65 +142,70 @@
           </div>
 
           <!-- ✈️ Cardholder Travel Mode / Travel Notices Section -->
-          <div class="control-row" style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 14px; margin-top: 15px;">
+          <!-- ✈️ Cardholder Travel Mode / Travel Notices Section -->
+          <div class="control-row travel-mode-banner">
             <div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 18px;">✈️</span>
+              <div class="travel-title-box">
+                <span class="plane-icon">✈️</span>
                 <strong>Cardholder Travel Mode</strong>
-                <span class="active-badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 10px; padding: 2px 8px; border-radius: 12px;">AI GEO-SHIELD</span>
+                <span class="active-badge travel-geo-badge">AI GEO-SHIELD</span>
               </div>
-              <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">
+              <p class="travel-desc">
                 Notify AI Shield of upcoming domestic/international trips to automatically suppress false-positive geo-velocity declines.
               </p>
             </div>
             <button type="button" 
-                    (click)="toggleTravelForm()"
-                    style="background: #0284c7; color: #ffffff; border: none; border-radius: 6px; padding: 6px 12px; font-weight: 600; cursor: pointer; font-size: 12px; white-space: nowrap;">
+                    class="btn-travel-toggle"
+                    (click)="toggleTravelForm()">
               {{ showTravelForm ? '✕ Close' : '+ Add Trip' }}
             </button>
           </div>
 
           <!-- Travel Notice Input Form Modal/Section -->
-          <div *ngIf="showTravelForm" style="background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-top: 10px;">
-            <h4 style="margin: 0 0 12px 0; color: #f8fafc; font-size: 13px;">Create Travel Notice for {{ selectedCard.cardNumberMasked }}</h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+          <div *ngIf="showTravelForm" class="travel-form-card">
+            <h4>Create Travel Notice for {{ selectedCard.cardNumberMasked }}</h4>
+            <div class="travel-grid-row">
               <div>
-                <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Destination Country</label>
-                <input type="text" [(ngModel)]="newTravelCountry" placeholder="e.g. United Arab Emirates" style="width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+                <label>Destination Country</label>
+                <input type="text" [(ngModel)]="newTravelCountry" placeholder="e.g. United Arab Emirates" class="travel-input">
               </div>
               <div>
-                <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Destination City</label>
-                <input type="text" [(ngModel)]="newTravelCity" placeholder="e.g. Dubai" style="width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+                <label>Destination City</label>
+                <input type="text" [(ngModel)]="newTravelCity" placeholder="e.g. Dubai" class="travel-input">
               </div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+            <div class="travel-grid-row">
               <div>
-                <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Departure Date</label>
-                <input type="date" [(ngModel)]="newTravelStart" style="width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+                <label>Departure Date</label>
+                <input type="date" [(ngModel)]="newTravelStart" class="travel-input">
               </div>
               <div>
-                <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Return Date</label>
-                <input type="date" [(ngModel)]="newTravelEnd" style="width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+                <label>Return Date</label>
+                <input type="date" [(ngModel)]="newTravelEnd" class="travel-input">
               </div>
             </div>
             <button type="button" 
-                    (click)="addTravelNotice()"
-                    style="width: 100%; background: #22c55e; color: #000; font-weight: 700; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                    class="btn-activate-travel"
+                    (click)="addTravelNotice()">
               ✅ Activate Travel Mode Protection
             </button>
           </div>
 
           <!-- Active Trips List -->
-          <div *ngIf="travelNotices.length > 0" style="margin-top: 15px;">
-            <div style="font-size: 12px; font-weight: 700; color: #94a3b8; margin-bottom: 8px;">Active Travel Itineraries</div>
-            <div *ngFor="let trip of travelNotices" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <strong style="color: #38bdf8; font-size: 13px;">✈️ {{ trip.destinationCity }}, {{ trip.destinationCountry }}</strong>
-                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
-                  {{ trip.startDate }} to {{ trip.endDate }} &bull; <span [style.color]="trip.activeNow ? '#4ade80' : '#fbbf24'">{{ trip.activeNow ? '● ACTIVE NOW' : 'SCHEDULED' }}</span>
+          <div *ngIf="travelNotices.length > 0" class="travel-notices-container">
+            <div class="travel-itineraries-title">Active Travel Itineraries</div>
+            <div *ngFor="let trip of travelNotices" class="travel-trip-item" [class.trip-active-now]="trip.activeNow">
+              <div class="trip-info">
+                <strong class="trip-dest">✈️ {{ trip.destinationCity }}, {{ trip.destinationCountry }}</strong>
+                <div class="trip-dates">
+                  {{ trip.startDate }} to {{ trip.endDate }} &bull; 
+                  <span class="trip-status-tag" [class.tag-live]="trip.activeNow" [class.tag-scheduled]="!trip.activeNow">
+                    <span class="trip-dot" *ngIf="trip.activeNow"></span>
+                    {{ trip.activeNow ? 'ACTIVE NOW' : 'SCHEDULED' }}
+                  </span>
                 </div>
               </div>
-              <button type="button" (click)="cancelNotice(trip.id)" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+              <button type="button" (click)="cancelNotice(trip.id)" class="btn-cancel-trip">
                 Cancel
               </button>
             </div>

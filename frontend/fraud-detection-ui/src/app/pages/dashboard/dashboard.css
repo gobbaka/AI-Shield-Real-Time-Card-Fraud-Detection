@@ -207,9 +207,20 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: all 0.2s ease;
+    transition: transform 0.2s var(--ease-out-expo), border-color 0.2s ease, box-shadow 0.2s ease;
     box-sizing: border-box;
+    animation: statCardFadeIn 320ms var(--ease-out-expo) both;
 }
+
+@keyframes statCardFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card:nth-child(1) { animation-delay: 30ms; }
+.stat-card:nth-child(2) { animation-delay: 70ms; }
+.stat-card:nth-child(3) { animation-delay: 110ms; }
+.stat-card:nth-child(4) { animation-delay: 150ms; }
 
 .stat-card:hover {
     border-color: rgba(255, 255, 255, 0.16);
@@ -566,6 +577,12 @@
     justify-content: center;
     z-index: 2000;
     padding: 16px;
+    animation: modalBackdropFadeIn 200ms ease both;
+}
+
+@keyframes modalBackdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .simulation-modal-card {
@@ -578,6 +595,7 @@
     color: #f8fafc;
     box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
     box-sizing: border-box;
+    animation: modalPopIn 280ms var(--ease-out-expo) both;
 }
 
 .simulation-header {
@@ -712,12 +730,149 @@
     cursor: not-allowed;
 }
 
+/* ==================== AI SHIELD REAL-TIME SCORING PIPELINE ==================== */
+.ai-pipeline-processing {
+    margin-top: 18px;
+    padding: 16px 18px;
+    background: rgba(8, 14, 28, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(2, 132, 199, 0.1);
+    animation: pipelineEnter 250ms var(--ease-out-expo) both;
+}
+
+@keyframes pipelineEnter {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pipeline-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.pipeline-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00f0ff;
+    box-shadow: 0 0 10px #00f0ff;
+    animation: pulseDotSoft 1.5s infinite;
+}
+
+.pipeline-headline {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #38bdf8;
+    text-transform: uppercase;
+    flex: 1;
+}
+
+.pipeline-clock {
+    font-size: 11px;
+    font-weight: 700;
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.15);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.pipeline-steps-flow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+}
+
+.pipeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 8px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    min-width: 72px;
+    animation: stepGlow 1.2s ease-in-out infinite alternate;
+}
+
+.pipeline-step:nth-child(1) { animation-delay: 0s; }
+.pipeline-step:nth-child(3) { animation-delay: 0.2s; }
+.pipeline-step:nth-child(5) { animation-delay: 0.4s; }
+.pipeline-step:nth-child(7) { animation-delay: 0.6s; }
+.pipeline-step:nth-child(9) { animation-delay: 0.8s; }
+
+@keyframes stepGlow {
+    0% { border-color: rgba(255, 255, 255, 0.08); background: rgba(15, 23, 42, 0.8); }
+    100% { border-color: rgba(56, 189, 248, 0.5); background: rgba(2, 132, 199, 0.15); }
+}
+
+.step-num {
+    font-size: 10px;
+    font-weight: 800;
+    color: #38bdf8;
+}
+
+.step-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #e2e8f0;
+    white-space: nowrap;
+}
+
+.step-arrow {
+    color: #38bdf8;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.pipeline-scanline-bar {
+    position: relative;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.scanline-beam {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+    animation: scanBeam 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes scanBeam {
+    0% { left: -35%; }
+    100% { left: 100%; }
+}
+
 .analysis-card {
     margin-top: 18px;
     padding: 16px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(15, 23, 42, 0.9);
+    animation: analysisResultSlideDown 320ms var(--ease-out-expo) both;
+}
+
+@keyframes analysisResultSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .analysis-card.res-approved {
@@ -750,6 +905,12 @@
     text-transform: uppercase;
     background: #0284c7;
     color: #fff;
+    animation: verdictBadgePop 250ms var(--ease-out-expo) both;
+}
+
+@keyframes verdictBadgePop {
+    from { transform: scale(0.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
 
 .res-approved .decision-tag { background: #16a34a; }
@@ -774,6 +935,7 @@
 .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+    transition: width 650ms var(--ease-out-expo);
 }
 
 .reasons-box {

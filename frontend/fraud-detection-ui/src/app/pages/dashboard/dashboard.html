@@ -311,6 +311,44 @@
                     <span *ngIf="isAnalyzing">Analyzing Risk with Machine Learning...</span>
                 </button>
 
+                <!-- AI Shield Real-Time Decision Pipeline State -->
+                <div class="ai-pipeline-processing" *ngIf="isAnalyzing" aria-live="polite">
+                    <div class="pipeline-header">
+                        <span class="pipeline-pulse"></span>
+                        <span class="pipeline-headline">AI SHIELD REAL-TIME SCORING PIPELINE</span>
+                        <span class="pipeline-clock">&lt;0.8ms INFERENCE</span>
+                    </div>
+                    <div class="pipeline-steps-flow">
+                        <div class="pipeline-step">
+                            <span class="step-num">01</span>
+                            <span class="step-text">TX Ingestion</span>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <span class="step-num">02</span>
+                            <span class="step-text">Feature Vector</span>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <span class="step-num">03</span>
+                            <span class="step-text">Rules + ONNX</span>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <span class="step-num">04</span>
+                            <span class="step-text">Risk Scored</span>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <span class="step-num">05</span>
+                            <span class="step-text">Verdict</span>
+                        </div>
+                    </div>
+                    <div class="pipeline-scanline-bar">
+                        <div class="scanline-beam"></div>
+                    </div>
+                </div>
+
                 <!-- Live Result Analysis Card -->
                 <div class="analysis-card" *ngIf="analysisResult" [class.res-approved]="analysisResult.status === 'Approved'" [class.res-review]="analysisResult.status === 'Review'" [class.res-blocked]="analysisResult.status === 'Blocked'">
                     <div class="analysis-head">

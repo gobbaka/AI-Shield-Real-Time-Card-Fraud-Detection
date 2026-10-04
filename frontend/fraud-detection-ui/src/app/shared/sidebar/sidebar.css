@@ -73,6 +73,7 @@
 }
 
 .sidebar a.nav-link {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -81,10 +82,23 @@
   text-decoration: none;
   width: 100%;
   border-radius: 9px;
-  transition: all 0.18s ease;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
   font-size: 14px;
   font-weight: 600;
   box-sizing: border-box;
+}
+
+.sidebar a.nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 3px;
+  height: 60%;
+  background: #38bdf8;
+  border-radius: 0 3px 3px 0;
+  transition: transform 220ms var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .sidebar a.nav-link span {
@@ -105,6 +119,7 @@
 .sidebar a.nav-link:hover {
   background: rgba(255, 255, 255, 0.05);
   color: #f8fafc;
+  transform: translateX(2px);
 }
 
 .sidebar a.nav-link:hover span {
@@ -115,6 +130,10 @@
   background: rgba(37, 99, 235, 0.15);
   border: 1px solid rgba(56, 189, 248, 0.3);
   color: #38bdf8;
+}
+
+.sidebar a.nav-link.active::before {
+  transform: translateY(-50%) scaleY(1);
 }
 
 .sidebar a.nav-link.active span {
@@ -157,6 +176,7 @@
   background: #10b981;
   border-radius: 50%;
   box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+  animation: pulseDotSoft 2.5s ease-in-out infinite;
 }
 
 .btn-role-switch {

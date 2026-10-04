@@ -17,6 +17,92 @@
     border-radius: 28px;
     padding: 28px;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+    animation: modalPopIn 380ms var(--ease-out-expo) both;
+}
+
+/* Verification Lifecycle Stepper */
+.verify-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: rgba(9, 14, 23, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.v-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    transition: color 240ms ease;
+}
+
+.v-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    transition: all 260ms var(--ease-out-expo);
+}
+
+.v-step.done .v-dot {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: #22c55e;
+    color: #4ade80;
+}
+
+.v-step.done span {
+    color: #94a3b8;
+}
+
+.v-step.active .v-dot {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.v-step.active span {
+    color: #38bdf8;
+}
+
+.v-step.success .v-dot {
+    background: rgba(34, 197, 94, 0.25);
+    border-color: #22c55e;
+    color: #4ade80;
+    box-shadow: 0 0 14px rgba(34, 197, 94, 0.5);
+}
+
+.v-step.danger .v-dot {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: #ef4444;
+    color: #f87171;
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.5);
+}
+
+.v-line {
+    flex: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0 8px 14px 8px;
+    transition: background 300ms ease;
+}
+
+.v-line.done {
+    background: #22c55e;
 }
 
 .bank-brand-header {
@@ -162,6 +248,62 @@
     line-height: 1.5;
 }
 
+/* Biometric / Cryptographic Scanning Box */
+.biometric-scan-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(6, 182, 212, 0.08);
+    border: 1px solid rgba(6, 182, 212, 0.35);
+    border-radius: 18px;
+    margin-bottom: 20px;
+    animation: pageFadeIn 250ms ease both;
+}
+
+.bio-scanner-ring {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(6, 182, 212, 0.15);
+    border: 2px solid #06b6d4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 0 16px rgba(6, 182, 212, 0.4);
+    animation: bioPulseRing 1.8s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes bioPulseRing {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+    }
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 22px rgba(6, 182, 212, 0.7);
+    }
+}
+
+.bio-icon {
+    font-size: 20px;
+}
+
+.bio-scan-text strong {
+    font-size: 13px;
+    color: #38bdf8;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.bio-scan-text p {
+    margin: 0;
+    font-size: 12px;
+    color: #cbd5e1;
+}
+
 .status-alert {
     padding: 14px 16px;
     border-radius: 14px;
@@ -169,7 +311,7 @@
     font-weight: 700;
     text-align: center;
     margin-bottom: 18px;
-    animation: fadeIn 0.25s ease;
+    animation: pageFadeIn 0.25s ease;
 }
 
 .status-alert.success {
@@ -182,6 +324,52 @@
     background: rgba(239, 68, 68, 0.18);
     border: 1px solid rgba(239, 68, 68, 0.5);
     color: #f87171;
+}
+
+/* Resolution Banner */
+.action-completed-banner {
+    padding: 22px;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: modalPopIn 320ms var(--ease-out-expo) both;
+}
+
+.action-completed-banner.banner-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    box-shadow: 0 10px 30px rgba(34, 197, 94, 0.15);
+}
+
+.action-completed-banner.banner-danger {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2);
+}
+
+.resolution-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.banner-success .resolution-title {
+    color: #4ade80;
+}
+
+.banner-danger .resolution-title {
+    color: #f87171;
+}
+
+.res-desc {
+    font-size: 12px;
+    color: #cbd5e1;
+    line-height: 1.5;
+    margin: 0 0 18px;
 }
 
 .action-buttons-group {
