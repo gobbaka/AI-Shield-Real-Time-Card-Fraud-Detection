@@ -1,0 +1,206 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+    <app-navbar></app-navbar>
+
+    <div class="fraud-page">
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>Fraud Alert Center</h1>
+
+                <p>Monitor suspicious transactions detected by the AI engine.</p>
+
+            </div>
+
+            <button class="refresh-btn" (click)="refresh()">{{loading ? 'Refreshing...' : 'Refresh Alerts'}}</button>
+
+        </div>
+
+        <div class="alert-summary">
+
+            <div class="alert-card critical">
+
+                <h4>Critical Alerts</h4>
+
+                <h2>{{criticalCount}}</h2>
+
+                <p>Immediate Action Required</p>
+
+            </div>
+
+            <div class="alert-card medium">
+
+                <h4>Medium Risk</h4>
+
+                <h2>{{reviewCount}}</h2>
+
+                <p>Under Investigation</p>
+
+            </div>
+
+            <div class="alert-card safe">
+
+                <h4>Resolved Today</h4>
+
+                <h2>{{resolvedCount}}</h2>
+
+                <p>Successfully Closed</p>
+
+            </div>
+
+        </div>
+
+        <div class="toolbar">
+            <input [(ngModel)]="search" placeholder="Search alert, customer, location" aria-label="Search alerts">
+            <select [(ngModel)]="filter" aria-label="Filter alerts">
+                <option value="All">All Status</option>
+                <option value="Open">Open</option>
+                <option value="Reviewing">Reviewing</option>
+                <option value="Blocked">Blocked</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+        </div>
+        <div class="alerts-table">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Alert ID</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Risk Score</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let alert of alerts">
+
+                        <td><strong>{{ alert.id }}</strong></td>
+
+                        <td>{{ alert.customer }}</td>
+
+                        <td>{{ alert.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+
+                        <td>
+                            <span [ngClass]="{
+                                'risk-high': alert.riskScore >= 80,
+                                'risk-medium': alert.riskScore >= 40 && alert.riskScore < 80,
+                                'risk-low': alert.riskScore < 40
+                            }">
+                                {{ alert.riskScore }}%
+                            </span>
+                        </td>
+
+                        <td>{{ alert.location }}</td>
+
+                        <td>
+                            <span [ngClass]="{
+                                'blocked': alert.status === 'Blocked',
+                                'review': alert.status === 'Reviewing' || alert.status === 'Open',
+                                'approved': alert.status === 'Resolved'
+                            }">
+                                {{ alert.status }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="actions-cell">
+                                <button type="button" class="action-btn" (click)="investigateAlert(alert)" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid #0284c7; padding: 4px 8px; border-radius: 4px; font-weight: 600; cursor: pointer;" title="Open Investigation Dossier">🔍 Investigate</button>
+                                <button *ngIf="alert.status !== 'Blocked'" type="button" class="action-btn block-btn" (click)="setStatus(alert, 'Blocked')" title="Block Alert">Block</button>
+                                <button *ngIf="alert.status !== 'Resolved'" type="button" class="action-btn resolve-btn" (click)="setStatus(alert, 'Resolved')" title="Resolve Alert">Resolve</button>
+                                <button *ngIf="alert.status !== 'Reviewing' && alert.status !== 'Resolved' && alert.status !== 'Blocked'" type="button" class="action-btn review-btn" (click)="setStatus(alert, 'Reviewing')" title="Review Alert">Review</button>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    <tr *ngIf="!alerts.length">
+                        <td colspan="7" class="empty-state">No fraud alerts match the search or filter criteria.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Investigation Case Dossier Modal -->
+        <div class="investigation-modal-overlay" *ngIf="investigatingCase" style="position: fixed; inset: 0; background: rgba(15,23,42,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
+            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; width: 100%; max-width: 600px; padding: 24px; color: #fff; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #334155; padding-bottom: 12px;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #f87171; display: flex; align-items: center; gap: 8px;">
+                            <span>🚨</span> Fraud Case Investigation: {{ investigatingCase.id }}
+                        </h3>
+                        <small style="color: #94a3b8;">Linked Transaction: {{ investigatingCase.transactionId }} · Customer: {{ investigatingCase.customer }}</small>
+                    </div>
+                    <button (click)="closeInvestigation()" style="background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155;">
+                    <div>
+                        <span style="display: block; font-size: 11px; color: #94a3b8;">Amount Flagged:</span>
+                        <strong style="color: #38bdf8; font-size: 16px;">{{ investigatingCase.amount | currency:'INR':'symbol':'1.0-0' }}</strong>
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 11px; color: #94a3b8;">Risk Evaluation:</span>
+                        <strong style="color: #ef4444; font-size: 16px;">{{ investigatingCase.riskScore }}% (Critical Anomaly)</strong>
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 11px; color: #94a3b8;">Location / IP Node:</span>
+                        <strong style="color: #cbd5e1; font-size: 13px;">{{ investigatingCase.location }}</strong>
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 11px; color: #94a3b8;">Current Case Status:</span>
+                        <strong style="color: #fbbf24; font-size: 13px;">{{ investigatingCase.status }}</strong>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">Triggered Heuristics & Signals:</label>
+                    <div style="background: rgba(239,68,68,0.1); border: 1px solid #ef4444; padding: 10px; border-radius: 6px; font-size: 13px; color: #fca5a5;">
+                        {{ investigatingCase.triggerReasons || 'Critical amount threshold exceeded (> ₹1,00,000); Off-hours purchase entropy; Geo velocity mismatch' }}
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">Investigator Case Notes:</label>
+                    <textarea [(ngModel)]="investigationNotes" rows="2" style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 13px; outline: none;"></textarea>
+                </div>
+
+                <div *ngIf="actionFeedback" style="background: rgba(56,189,248,0.15); border: 1px solid #0284c7; color: #38bdf8; padding: 8px; border-radius: 6px; font-size: 12px; margin-bottom: 14px;">
+                    {{ actionFeedback }}
+                </div>
+
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                    <button type="button" (click)="dispatchVerificationSms(investigatingCase)" style="padding: 8px 12px; background: #334155; color: #38bdf8; border: 1px solid #0284c7; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        📲 Dispatch Verification SMS
+                    </button>
+                    <button type="button" (click)="emergencyFreezeCard(investigatingCase)" style="padding: 8px 12px; background: #dc2626; color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        🔒 Emergency Freeze Card
+                    </button>
+                    <button type="button" (click)="resolveInvestigationCase(investigatingCase)" style="padding: 8px 14px; background: #059669; color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        ✅ Mark Resolved
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <app-chatbot></app-chatbot>
+
+    </div>
+
+</div>

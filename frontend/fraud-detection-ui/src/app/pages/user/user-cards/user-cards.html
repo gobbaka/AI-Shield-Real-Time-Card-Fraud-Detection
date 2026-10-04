@@ -1,0 +1,208 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+  <app-navbar></app-navbar>
+
+  <div class="user-cards-page">
+
+    <div class="page-title-row">
+      <div>
+        <h1>My Protected Cards</h1>
+        <p>Manage security controls, toggle instant card freeze, and configure spending rules.</p>
+      </div>
+      <div class="status-badge" *ngIf="statusMessage">
+        {{ statusMessage }}
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="cards-state-card">
+      <span class="state-icon">⏳</span>
+      <p>Loading your protected card credentials & spending security policies...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage && !isLoading" class="cards-state-card error">
+      <span class="state-icon">⚠️</span>
+      <p>{{ errorMessage }}</p>
+      <button type="button" (click)="loadCards()" style="margin-top: 10px; background: #38bdf8; color: #000; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+        Retry
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && !errorMessage && cards.length === 0" class="cards-state-card">
+      <span class="state-icon">💳</span>
+      <p>No active payment cards linked to this cardholder profile.</p>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="cards-layout" *ngIf="!isLoading && cards.length > 0">
+      
+      <!-- Cards List -->
+      <div class="cards-column">
+        <div *ngFor="let card of cards" 
+             class="credit-card-item" 
+             [class.card-selected]="selectedCard?.id === card.id"
+             [class.card-blocked]="card.status === 'BLOCKED'"
+             (click)="selectCard(card)">
+          
+          <div class="card-glass-top">
+            <span class="card-chip">💳</span>
+            <span class="card-type-name">{{ card.cardType }}</span>
+          </div>
+
+          <div class="card-number-large">{{ card.cardNumberMasked }}</div>
+
+          <div class="card-glass-bottom">
+            <div>
+              <small>CARDHOLDER</small>
+              <strong>{{ card.cardHolder }}</strong>
+            </div>
+            <div>
+              <small>EXPIRES</small>
+              <strong>{{ card.expiry }}</strong>
+            </div>
+            <div>
+              <small>STATUS</small>
+              <span class="status-indicator" [class.ind-active]="card.status === 'ACTIVE'" [class.ind-blocked]="card.status === 'BLOCKED'">
+                {{ card.status }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Selected Card Security Controls Panel -->
+      <div class="controls-column" *ngIf="selectedCard">
+        <div class="security-card-panel">
+          
+          <div class="panel-top-header">
+            <h3>Card Security Controls</h3>
+            <span class="active-badge">{{ selectedCard.cardType }}</span>
+          </div>
+
+          <!-- Instant Freeze / Unlock Switch -->
+          <div class="control-row highlight-control">
+            <div>
+              <strong>Instant Card Lock</strong>
+              <p>Immediately block all online and POS swipes if card is misplaced</p>
+            </div>
+            <button type="button" 
+                    class="btn-toggle-lock"
+                    [class.btn-lock-active]="selectedCard.status === 'ACTIVE'"
+                    [class.btn-unlock-active]="selectedCard.status === 'BLOCKED'"
+                    (click)="toggleLock(selectedCard)">
+              {{ selectedCard.status === 'ACTIVE' ? '🔒 Freeze Card' : '🔓 Unlock Card' }}
+            </button>
+          </div>
+
+          <!-- Daily Spending Limit Slider -->
+          <div class="control-row">
+            <div>
+              <strong>Daily Transaction Limit</strong>
+              <p>Max amount allowed per day without step-up OTP</p>
+            </div>
+            <div style="text-align: right;">
+              <strong style="color: #38bdf8; font-size: 16px;">{{ selectedCard.dailyLimit | currency:'INR':'symbol':'1.0-0' }}</strong>
+            </div>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <input type="range" min="10000" max="300000" step="5000" [(ngModel)]="selectedCard.dailyLimit" (change)="saveLimit()" style="width: 100%; accent-color: #38bdf8;">
+          </div>
+
+          <!-- SMS Notification Info -->
+          <div class="control-row">
+            <div>
+              <strong>SMS Fraud Alert Phone</strong>
+              <p>Live alerts and verification links are dispatched to this number</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <strong style="color: #38bdf8;">{{ selectedCard.linkedPhone }}</strong>
+              <span class="verified-phone-tag">VERIFIED</span>
+            </div>
+          </div>
+
+          <!-- Biometric Passkey Policy -->
+          <div class="control-row">
+            <div>
+              <strong>Zero-Biometric Policy</strong>
+              <p>FIDO2 / WebAuthn standard compliant. No biometric templates stored.</p>
+            </div>
+            <span style="color: #4ade80; font-weight: 700; font-size: 12px;">Active & Secure</span>
+          </div>
+
+          <!-- ✈️ Cardholder Travel Mode / Travel Notices Section -->
+          <div class="control-row" style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 14px; margin-top: 15px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px;">✈️</span>
+                <strong>Cardholder Travel Mode</strong>
+                <span class="active-badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 10px; padding: 2px 8px; border-radius: 12px;">AI GEO-SHIELD</span>
+              </div>
+              <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">
+                Notify AI Shield of upcoming domestic/international trips to automatically suppress false-positive geo-velocity declines.
+              </p>
+            </div>
+            <button type="button" 
+                    (click)="toggleTravelForm()"
+                    style="background: #0284c7; color: #ffffff; border: none; border-radius: 6px; padding: 6px 12px; font-weight: 600; cursor: pointer; font-size: 12px; white-space: nowrap;">
+              {{ showTravelForm ? '✕ Close' : '+ Add Trip' }}
+            </button>
+          </div>
+
+          <!-- Travel Notice Input Form Modal/Section -->
+          <div *ngIf="showTravelForm" style="background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-top: 10px;">
+            <h4 style="margin: 0 0 12px 0; color: #f8fafc; font-size: 13px;">Create Travel Notice for {{ selectedCard.cardNumberMasked }}</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+              <div>
+                <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Destination Country</label>
+                <input type="text" [(ngModel)]="newTravelCountry" placeholder="e.g. United Arab Emirates" style="width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+              </div>
+              <div>
+                <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Destination City</label>
+                <input type="text" [(ngModel)]="newTravelCity" placeholder="e.g. Dubai" style="width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+              <div>
+                <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Departure Date</label>
+                <input type="date" [(ngModel)]="newTravelStart" style="width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+              </div>
+              <div>
+                <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Return Date</label>
+                <input type="date" [(ngModel)]="newTravelEnd" style="width: 100%; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+              </div>
+            </div>
+            <button type="button" 
+                    (click)="addTravelNotice()"
+                    style="width: 100%; background: #22c55e; color: #000; font-weight: 700; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+              ✅ Activate Travel Mode Protection
+            </button>
+          </div>
+
+          <!-- Active Trips List -->
+          <div *ngIf="travelNotices.length > 0" style="margin-top: 15px;">
+            <div style="font-size: 12px; font-weight: 700; color: #94a3b8; margin-bottom: 8px;">Active Travel Itineraries</div>
+            <div *ngFor="let trip of travelNotices" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <strong style="color: #38bdf8; font-size: 13px;">✈️ {{ trip.destinationCity }}, {{ trip.destinationCountry }}</strong>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
+                  {{ trip.startDate }} to {{ trip.endDate }} &bull; <span [style.color]="trip.activeNow ? '#4ade80' : '#fbbf24'">{{ trip.activeNow ? '● ACTIVE NOW' : 'SCHEDULED' }}</span>
+                </div>
+              </div>
+              <button type="button" (click)="cancelNotice(trip.id)" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+                Cancel
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<app-chatbot></app-chatbot>

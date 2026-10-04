@@ -1,0 +1,189 @@
+<div class="gemini-chatbot-root">
+
+  <!-- FLOATING GEMINI TRIGGER BUTTON -->
+  <button 
+    class="gemini-chat-toggle" 
+    (click)="toggleChat()" 
+    [class.active]="isOpen"
+    aria-label="Ask Gemini AI Copilot"
+    title="Ask Gemini AI Fraud Assistant">
+    <div class="gemini-sparkle-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="url(#geminiGrad)" />
+        <path d="M19 2L20.2 5.8L24 7L20.2 8.2L19 12L17.8 8.2L14 7L17.8 5.8L19 2Z" fill="#38bdf8" opacity="0.8"/>
+        <defs>
+          <linearGradient id="geminiGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#818cf8"/>
+            <stop offset="0.5" stop-color="#38bdf8"/>
+            <stop offset="1" stop-color="#34d399"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <span class="toggle-label" *ngIf="!isOpen">Gemini AI</span>
+  </button>
+
+  <!-- GEMINI CHAT WINDOW -->
+  <div class="gemini-window" *ngIf="isOpen">
+
+    <!-- HEADER -->
+    <div class="gemini-header">
+      <div class="header-brand">
+        <div class="gemini-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="#fff" />
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <div class="title-row">
+            <h4>Gemini Fraud Copilot</h4>
+            <span class="live-tag">
+              <span class="live-dot"></span> LIVE
+            </span>
+          </div>
+          <span class="model-badge">✦ Gemini 1.5 Flash • Real-Time Core</span>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Key Settings Toggle -->
+        <button class="icon-tool-btn" (click)="showApiKeyInput = !showApiKeyInput" title="Configure Gemini API Key">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+
+        <!-- Clear Chat -->
+        <button class="icon-tool-btn" (click)="clearChat()" title="Clear Chat History">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+
+        <!-- Close / Minimize -->
+        <button class="icon-tool-btn close" (click)="isOpen = false" title="Close Assistant">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- OPTIONAL API KEY BANNER -->
+    <div class="api-key-drawer" *ngIf="showApiKeyInput">
+      <div class="drawer-inner">
+        <label>Google Gemini API Key (Optional)</label>
+        <div class="key-input-row">
+          <input type="password" [(ngModel)]="apiKey" placeholder="AIzaSy..." />
+          <button (click)="saveApiKey()">Save</button>
+        </div>
+        <small>Key is saved locally in your browser. Leave blank to use built-in offline intelligence.</small>
+      </div>
+    </div>
+
+    <!-- SUGGESTION CHIPS -->
+    <div class="suggestions-strip" *ngIf="messages.length <= 2">
+      <button 
+        *ngFor="let sug of quickSuggestions" 
+        class="suggestion-chip" 
+        (click)="useSuggestion(sug)">
+        {{ sug }}
+      </button>
+    </div>
+
+    <!-- CHAT MESSAGES BODY -->
+    <div class="gemini-body" #chatScrollContainer>
+      
+      <div 
+        *ngFor="let msg of messages" 
+        class="message-row"
+        [class.user-row]="msg.sender === 'user'"
+        [class.gemini-row]="msg.sender === 'gemini'">
+        
+        <!-- Gemini Avatar -->
+        <div class="msg-avatar" *ngIf="msg.sender === 'gemini'">
+          <span>✦</span>
+        </div>
+
+        <div class="msg-content-wrap">
+          <div class="msg-bubble" [class.user-bubble]="msg.sender === 'user'" [class.gemini-bubble]="msg.sender === 'gemini'" [class.error-bubble]="msg.isError">
+            
+            <!-- Markdown Formatted Rendering -->
+            <div class="formatted-text" [innerHTML]="formatMarkdown(msg.text)"></div>
+
+            <!-- Retry button for errors -->
+            <div class="retry-box" *ngIf="msg.canRetry">
+              <button class="retry-btn" (click)="retryMessage(msg.originalPrompt)">
+                🔄 Retry Question
+              </button>
+            </div>
+
+            <!-- Action button if navigation is attached -->
+            <div class="msg-action-box" *ngIf="msg.actionRoute">
+              <button class="msg-action-btn" (click)="navigateToAction(msg.actionRoute)">
+                {{ msg.actionLabel || 'View Page' }} →
+              </button>
+            </div>
+
+            <!-- Quick replies -->
+            <div class="quick-replies-row" *ngIf="msg.quickReplies && msg.quickReplies.length">
+              <button 
+                *ngFor="let rep of msg.quickReplies" 
+                class="quick-reply-btn"
+                (click)="useSuggestion(rep)">
+                ✦ {{ rep }}
+              </button>
+            </div>
+
+          </div>
+          <span class="msg-time">{{ msg.timestamp }}</span>
+        </div>
+
+      </div>
+
+      <!-- THINKING INDICATOR -->
+      <div class="thinking-row" *ngIf="isThinking">
+        <div class="msg-avatar">
+          <span class="sparkle-spin">✦</span>
+        </div>
+        <div class="thinking-bubble">
+          <span class="thinking-text">Gemini is reasoning</span>
+          <span class="dot-flashing"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- INPUT FOOTER -->
+    <div class="gemini-footer">
+      <div class="input-wrapper">
+        <input
+          [(ngModel)]="userMessage"
+          (keydown.enter)="sendMessage()"
+          placeholder="Ask Gemini about transactions, risk, rules..." 
+          autocomplete="off" />
+
+        <!-- Voice Button -->
+        <button 
+          class="voice-mic-btn" 
+          [class.listening]="isListening"
+          (click)="startVoice()" 
+          title="Speak to Gemini AI">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </button>
+      </div>
+
+      <button 
+        class="gemini-send-btn" 
+        [disabled]="!userMessage.trim() || isThinking"
+        (click)="sendMessage()"
+        title="Send Message">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+</div>

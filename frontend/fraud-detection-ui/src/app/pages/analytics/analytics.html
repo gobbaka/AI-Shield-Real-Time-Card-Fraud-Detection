@@ -1,0 +1,142 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+    <app-navbar></app-navbar>
+
+    <div class="analytics-page">
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>Analytics Dashboard</h1>
+
+                <p>AI powered fraud analytics and transaction insights.</p>
+
+            </div>
+
+            <button class="btn btn-primary download-btn" (click)="downloadReport()" aria-label="Download report">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15V3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Download Report
+            </button>
+
+            <select class="range-select" [(ngModel)]="timeRange" (change)="onRangeChange()" aria-label="Analytics time range">
+                <option value="7d">Last 7 days</option>
+                <option value="30d">Last 30 days</option>
+                <option value="90d">Last 90 days</option>
+            </select>
+
+        </div>
+
+        <!-- KPI Cards -->
+
+        <div class="kpi-grid">
+
+            <div class="kpi-card">
+
+                <h4>Total Revenue</h4>
+
+                <h2>{{ analytics.totalAmount | currency:'INR':'symbol':'1.0-0' }}</h2>
+
+                <span class="up">▲ 14%</span>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <h4>Fraud Detected</h4>
+
+                <h2>{{ analytics.fraudCount }}</h2>
+
+                <span class="danger">+18 Today</span>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <h4>AI Accuracy</h4>
+
+                <h2>{{ modelAccuracy }}%</h2>
+
+                <span class="up">Excellent</span>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <h4>Protected Amount</h4>
+
+                <h2>{{ protectedAmount | currency:'INR':'symbol':'1.0-0' }}</h2>
+
+                <span class="up">Recovered</span>
+
+            </div>
+
+        </div>
+
+        <!-- Charts -->
+
+        <div class="chart-grid">
+
+            <div class="chart-card">
+
+                <h3>Transaction Trend</h3>
+
+                <div class="chart-placeholder" *ngIf="analytics.trend.length; else noTrendData">
+
+                    <div class="bar-chart"><div class="bar" *ngFor="let value of analytics.trend" [style.height.%]="value"><span>{{value}}</span></div></div>
+
+                </div>
+                <ng-template #noTrendData><p>No transaction trend data available.</p></ng-template>
+
+            </div>
+
+            <div class="chart-card">
+
+                <h3>Fraud Distribution</h3>
+
+                <div class="chart-placeholder">
+
+                    <div class="distribution"><strong>{{analytics.distribution.blocked}} blocked</strong><p>Approved {{analytics.distribution.approved}} · Review {{analytics.distribution.review}}</p></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Bottom -->
+
+        <div class="bottom-grid">
+
+            <div class="chart-card">
+
+                <h3>Top Fraud Locations</h3>
+
+                    <ul class="location-list" *ngIf="analytics.locations.length; else noLocationData">
+                    <li *ngFor="let location of analytics.locations">{{ location[0] }} <span>{{ location[1] }} alerts</span></li>
+
+                </ul>
+                    <ng-template #noLocationData><p>No fraud location data available.</p></ng-template>
+
+            </div>
+
+            <div class="chart-card">
+
+                <h3>AI Performance</h3>
+
+                <div class="chart-placeholder">
+
+                    <div class="performance"><div class="circle">{{ modelAccuracy }}%</div><p>Risk model confidence</p></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<app-chatbot></app-chatbot>

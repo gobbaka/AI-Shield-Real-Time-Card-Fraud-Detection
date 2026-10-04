@@ -1,0 +1,108 @@
+<div class="verify-page-wrapper">
+    <div class="verify-container">
+        
+        <!-- Bank Brand Header -->
+        <div class="bank-brand-header">
+            <div class="bank-logo">🛡️</div>
+            <div>
+                <h2>AI Shield Banking Security</h2>
+                <p>Cardholder Real-Time Fraud Verification Gateway</p>
+            </div>
+        </div>
+
+        <div class="verification-content" *ngIf="verification">
+
+            <!-- Fraud Alert Warning Header -->
+            <div class="alert-banner">
+                <span class="warning-icon">🚨</span>
+                <div>
+                    <h4>Suspicious Card Activity Detected</h4>
+                    <p>Our AI fraud engine flagged an anomalous charge requiring your direct authorization.</p>
+                </div>
+            </div>
+
+            <!-- Safe Transaction Attributes Grid -->
+            <div class="details-card">
+                <div class="detail-item">
+                    <span class="detail-label">Cardholder:</span>
+                    <span class="detail-val"><strong>{{ verification.customerName }}</strong></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Linked Phone:</span>
+                    <span class="detail-val" style="color: #38bdf8;">{{ verification.customerPhone || '+91 98222 33445' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Card Number:</span>
+                    <span class="detail-val">{{ verification.cardMasked }}</span>
+                </div>
+                <div class="detail-item highlight-row">
+                    <span class="detail-label">Transaction Amount:</span>
+                    <span class="detail-val amount-val">{{ verification.amount | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Merchant Outlet:</span>
+                    <span class="detail-val">{{ verification.merchantName }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Location:</span>
+                    <span class="detail-val">{{ verification.location }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Risk Evaluation:</span>
+                    <span class="detail-val" style="color: #ef4444; font-weight: 700;">{{ verification.riskScore }}/100 ({{ verification.riskLevel }} Risk)</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Reference ID:</span>
+                    <span class="detail-val" style="font-family: monospace;">{{ verification.transactionRef }}</span>
+                </div>
+            </div>
+
+            <!-- Action Prompt -->
+            <div class="action-prompt" *ngIf="!actionCompleted">
+                <h3>Did you authorize this transaction?</h3>
+                <p>If you made this purchase, click <strong>YES</strong> to authenticate with your device. If this was not you, click <strong>NO</strong> to instantly freeze your card and prevent unauthorized charges.</p>
+            </div>
+
+            <!-- Processing / Completed Message -->
+            <div class="status-alert" *ngIf="statusMessage" [class.success]="isSuccess" [class.danger]="!isSuccess">
+                {{ statusMessage }}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons-group" *ngIf="!actionCompleted">
+                <button type="button" class="btn-authorize" (click)="authorizeTransaction()" [disabled]="isProcessing">
+                    <span>🔐</span> YES, I AUTHORIZED IT
+                </button>
+                <button type="button" class="btn-decline" (click)="rejectTransaction()" [disabled]="isProcessing">
+                    <span>🛑</span> NO, THIS WAS NOT ME
+                </button>
+            </div>
+
+            <div *ngIf="actionCompleted" style="text-align: center; margin-top: 20px;">
+                <button type="button" class="btn-return" (click)="backToDashboard()">Return to Dashboard</button>
+            </div>
+
+            <!-- Real SMS Dispatch Tester Box -->
+            <div class="sms-tester-card">
+                <div class="sms-tester-header">
+                    <span style="font-size: 16px;">📲</span>
+                    <strong>Send Live SMS to your Real Mobile Number</strong>
+                </div>
+                <p class="sms-tester-desc">Test real SMS delivery to your phone. Enter your 10-digit mobile number below:</p>
+                <div class="sms-input-row">
+                    <input type="text" [(ngModel)]="customPhone" placeholder="+91 9876543210" class="phone-input">
+                    <button type="button" class="btn-send-sms" (click)="sendRealSms()" [disabled]="smsSending">
+                        {{ smsSending ? 'Sending...' : 'Send Real SMS' }}
+                    </button>
+                </div>
+                <small *ngIf="smsSentStatus" class="sms-status-text">{{ smsSentStatus }}</small>
+            </div>
+
+            <div class="security-footer-note">
+                <small>🔒 Protected by AI Shield Banking Gateway & FIDO2 WebAuthn Standards. Zero raw biometrics are stored.</small>
+            </div>
+
+        </div>
+
+    </div>
+</div>

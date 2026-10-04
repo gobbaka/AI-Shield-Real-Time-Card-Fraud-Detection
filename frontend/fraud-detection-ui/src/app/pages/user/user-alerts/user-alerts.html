@@ -1,0 +1,163 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+  <app-navbar></app-navbar>
+
+  <div class="user-alerts-page">
+
+    <div class="page-title-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h1>Fraud Alerts & Cardholder Verification</h1>
+        <p>Review real-time anomaly alerts flagged on your accounts and perform step-up authentication.</p>
+      </div>
+      <button type="button" (click)="openFreezeModal()" style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: #fff; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 6px -1px rgba(220,38,38,0.3);">
+        <span>🚨</span> Freeze / Report Stolen Card
+      </button>
+    </div>
+
+    <!-- Emergency Card Freeze Modal -->
+    <div class="freeze-modal-overlay" *ngIf="showFreezeModal" style="position: fixed; inset: 0; background: rgba(15,23,42,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
+      <div style="background: #1e293b; border: 1px solid #dc2626; border-radius: 16px; width: 100%; max-width: 440px; padding: 24px; color: #fff; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #f87171; display: flex; align-items: center; gap: 8px;">
+            <span>🔒</span> Emergency Card Freeze
+          </h3>
+          <button (click)="closeFreezeModal()" style="background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer;">×</button>
+        </div>
+        <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 16px;">
+          Freezing your card instantly blocks all incoming contactless, online (CNP), and POS merchant transactions across global networks.
+        </p>
+        <div style="margin-bottom: 14px;">
+          <label style="display: block; font-size: 12px; color: #94a3b8; margin-bottom: 4px;">Select Card to Lock</label>
+          <select [(ngModel)]="selectedCardToFreeze" style="width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 14px;">
+            <option value="1">HDFC Visa Platinum (**** 9931)</option>
+            <option value="2">ICICI RuPay Select (**** 4120)</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 18px;">
+          <label style="display: block; font-size: 12px; color: #94a3b8; margin-bottom: 4px;">Reason for Report</label>
+          <input type="text" [(ngModel)]="freezeReason" style="width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" (click)="closeFreezeModal()" style="flex: 1; padding: 10px; background: #334155; color: #cbd5e1; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">Cancel</button>
+          <button type="button" (click)="executeEmergencyFreeze()" [disabled]="isProcessing" style="flex: 2; padding: 10px; background: #dc2626; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+            {{ isProcessing ? 'Freezing...' : 'Confirm & Freeze Card' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Action Feedback Message -->
+    <div class="status-alert" *ngIf="actionMessage" [class.success]="isSuccess" [class.danger]="!isSuccess">
+      {{ actionMessage }}
+    </div>
+
+    <!-- PENDING STEP-UP VERIFICATION REQUESTS SECTION -->
+    <div class="section-card" *ngIf="pendingVerifications.length > 0">
+      <div class="section-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="pulse-icon">🚨</span>
+          <h2 style="margin: 0; color: #fca5a5;">Pending Step-Up Authorizations ({{ pendingVerifications.length }})</h2>
+        </div>
+        <small style="color: #94a3b8;">Expires in 10 minutes</small>
+      </div>
+
+      <div class="verification-cards-list">
+        <div *ngFor="let v of pendingVerifications" class="verification-box">
+          
+          <div class="v-details-grid">
+            <div>
+              <span class="v-label">Merchant Outlet:</span>
+              <strong class="v-val">{{ v.merchantName }}</strong>
+            </div>
+            <div>
+              <span class="v-label">Amount:</span>
+              <strong class="v-val" style="color: #38bdf8; font-size: 16px;">{{ v.amount | currency:'INR':'symbol':'1.0-0' }}</strong>
+            </div>
+            <div>
+              <span class="v-label">Location:</span>
+              <strong class="v-val">{{ v.location }}</strong>
+            </div>
+            <div>
+              <span class="v-label">Card Masked:</span>
+              <strong class="v-val">{{ v.cardMasked }}</strong>
+            </div>
+            <div>
+              <span class="v-label">Risk Evaluation:</span>
+              <strong class="v-val" style="color: #ef4444;">{{ v.riskScore }}/100 ({{ v.riskLevel }} Anomaly)</strong>
+            </div>
+            <div>
+              <span class="v-label">Reference ID:</span>
+              <code style="color: #94a3b8;">{{ v.transactionRef }}</code>
+            </div>
+          </div>
+
+          <!-- Question Prompt -->
+          <div class="prompt-box">
+            <h4>Did you authorize this transaction?</h4>
+            <p>Select YES to confirm with your biometric device challenge, or select NO if this was an unauthorized fraud attempt.</p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons-row">
+            <button type="button" class="btn-auth-yes" (click)="authorize(v)" [disabled]="isProcessing">
+              <span>🔐</span> YES, I AUTHORIZED IT
+            </button>
+            <button type="button" class="btn-auth-no" (click)="reject(v)" [disabled]="isProcessing">
+              <span>🛑</span> NO, THIS WAS NOT ME
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT ACCOUNT SECURITY ALERTS LIST -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>Account Security & Anomaly Logs</h2>
+        <small style="color: #94a3b8;">Protected by AI Shield Engine</small>
+      </div>
+
+      <div class="alerts-table-wrap">
+        <table class="user-alerts-table">
+          <thead>
+            <tr>
+              <th>Alert ID</th>
+              <th>Transaction ID</th>
+              <th>Trigger Reason</th>
+              <th>Location</th>
+              <th>Amount</th>
+              <th>Risk Score</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let alert of alerts">
+              <td><code>{{ alert.id }}</code></td>
+              <td><code>{{ alert.transactionId }}</code></td>
+              <td>{{ alert.triggerReasons || 'Suspicious Swipe Frequency' }}</td>
+              <td>{{ alert.location }}</td>
+              <td>{{ alert.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+              <td>
+                <span class="risk-score-badge" [class.score-high]="alert.riskScore >= 80" [class.score-med]="alert.riskScore < 80">
+                  {{ alert.riskScore }}%
+                </span>
+              </td>
+              <td>
+                <span class="alert-status-pill" [class.pill-resolved]="alert.status === 'Resolved'" [class.pill-blocked]="alert.status === 'Blocked'">
+                  {{ alert.status }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="!alerts.length">
+              <td colspan="7" style="text-align: center; color: #94a3b8; padding: 24px;">No active alerts on your cards.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+<app-chatbot></app-chatbot>

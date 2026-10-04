@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Database Service (PostgreSQL for persistent production storage)
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: aishield-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-aishield_fraud_db}
+      POSTGRES_USER: ${POSTGRES_USER:-aishield_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - aishield-network
+
+  # Backend REST API Service (Spring Boot 3 / Java 21)
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: aishield-backend
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres-db:5432/aishield_fraud_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-aishield_admin}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SMS_PROVIDER: ${SMS_PROVIDER:-auto}
+      FAST2SMS_API_KEY: ${FAST2SMS_API_KEY:-}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+    networks:
+      - aishield-network
+
+  # Frontend Web UI (Angular 19 + Nginx)
+  frontend:
+    build:
+      context: ../frontend/fraud-detection-ui
+      dockerfile: Dockerfile
+    container_name: aishield-frontend
+    restart: always
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - aishield-network
+
+volumes:
+  pgdata:
+
+networks:
+  aishield-network:
+    driver: bridge

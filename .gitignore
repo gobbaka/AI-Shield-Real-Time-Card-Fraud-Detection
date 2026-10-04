@@ -1,0 +1,67 @@
+# ==============================================================================
+# AI SHIELD - ROOT GITIGNORE
+# ==============================================================================
+
+# Environment & Secret Files
+.env
+.env.*
+*.env
+!.env.example
+
+# Java / Maven Build Artifacts
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+
+# Frontend / Node / Angular Build Artifacts
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.angular/
+**/.angular/
+.npm/
+
+# Python / Machine Learning Virtual Environments & Cache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+**/.venv/
+venv/
+**/venv/
+.pytest_cache/
+*.ipynb_checkpoints
+
+# IDE, Editor & OS Metadata
+.idea/
+**/.idea/
+.vscode/
+**/.vscode/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs & Temporary Files
+*.log
+**/logs/
+*.tmp
+*.bak
+*.swp
+*~
+
+# Local Reports & Output Artifacts
+AI_SHIELD_PROJECT_AUDIT_REPORT.html
+
+# Archives
+*.zip
+*.tar.gz

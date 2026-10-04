@@ -1,0 +1,136 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+  <app-navbar></app-navbar>
+
+  <div class="user-dashboard-page">
+    
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+      <div>
+        <h1>Welcome back, {{ userName }}</h1>
+        <p>Your cards are protected by AI Shield Real-Time Fraud & Anomaly Defense.</p>
+      </div>
+      <div class="security-badge-card">
+        <div class="shield-icon">🛡️</div>
+        <div>
+          <span class="badge-title">Security Health</span>
+          <strong class="badge-val">{{ securityScore }}/100 Safe</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Step-Up Alert Banner (If pending verification exists) -->
+    <div *ngIf="pendingVerifications.length > 0" class="verification-alert-banner">
+      <div class="alert-left">
+        <span class="pulse-icon">🚨</span>
+        <div>
+          <h3>Action Required: Suspicious Transaction Flagged</h3>
+          <p>An anomalous charge of <strong>{{ pendingVerifications[0].amount | currency:'INR':'symbol':'1.0-0' }}</strong> at <strong>{{ pendingVerifications[0].merchantName }}</strong> requires your authorization.</p>
+        </div>
+      </div>
+      <a [routerLink]="['/verify', pendingVerifications[0].verificationRequestId]" class="btn-review-now">
+        Authorize / Decline ➔
+      </a>
+    </div>
+
+    <!-- Overview Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">💳</span>
+        <div>
+          <span class="stat-label">Active Cards</span>
+          <strong class="stat-val">{{ activeCardsCount }} / {{ cards.length }}</strong>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">💰</span>
+        <div>
+          <span class="stat-label">Available Credit Limit</span>
+          <strong class="stat-val">{{ totalAvailableCredit | currency:'INR':'symbol':'1.0-0' }}</strong>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📱</span>
+        <div>
+          <span class="stat-label">SMS Alert Link</span>
+          <strong class="stat-val" style="color: #38bdf8;">{{ cards[0]?.linkedPhone || '+91 98222 33445' }}</strong>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🔒</span>
+        <div>
+          <span class="stat-label">Biometric Verification</span>
+          <strong class="stat-val" style="color: #4ade80;">FIDO2 Enabled</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Layout (My Cards + Recent Personal Transactions) -->
+    <div class="content-split-layout">
+      
+      <!-- Cards Section -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <h2>My Linked Cards</h2>
+          <a routerLink="/user/cards" class="panel-link">Manage Cards ➔</a>
+        </div>
+
+        <div class="cards-stack">
+          <div *ngFor="let card of cards" class="credit-card-preview" [class.card-blocked]="card.status === 'BLOCKED'">
+            <div class="card-top-row">
+              <span class="card-brand">{{ card.cardType }}</span>
+              <span class="card-status-pill" [class.pill-active]="card.status === 'ACTIVE'" [class.pill-blocked]="card.status === 'BLOCKED'">
+                {{ card.status }}
+              </span>
+            </div>
+            <div class="card-number">{{ card.cardNumberMasked }}</div>
+            <div class="card-bottom-row">
+              <div>
+                <small>CARDHOLDER</small>
+                <strong>{{ card.cardHolder }}</strong>
+              </div>
+              <div>
+                <small>EXPIRES</small>
+                <strong>{{ card.expiry }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions Section -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <h2>Recent Card Activity</h2>
+          <a routerLink="/user/transactions" class="panel-link">View All ➔</a>
+        </div>
+
+        <div class="tx-list">
+          <div *ngFor="let tx of recentTxns" class="tx-row">
+            <div class="tx-icon" [class.tx-danger]="tx.risk === 'High'" [class.tx-warning]="tx.risk === 'Medium'">
+              {{ tx.risk === 'High' ? '⚠️' : '🛍️' }}
+            </div>
+            <div class="tx-info">
+              <strong>{{ tx.merchantName || 'Retail Purchase' }}</strong>
+              <small>{{ tx.location }} • {{ tx.timestamp | date:'shortTime' }}</small>
+            </div>
+            <div class="tx-right">
+              <span class="tx-amount">{{ tx.amount | currency:'INR':'symbol':'1.0-0' }}</span>
+              <span class="tx-status" [ngClass]="{
+                'status-approved': tx.status === 'Approved' || tx.status === 'OWNER_VERIFIED',
+                'status-pending': tx.status === 'Verification Required',
+                'status-blocked': tx.status === 'Blocked' || tx.status === 'CUSTOMER_REPORTED_FRAUD'
+              }">
+                {{ tx.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<app-chatbot></app-chatbot>

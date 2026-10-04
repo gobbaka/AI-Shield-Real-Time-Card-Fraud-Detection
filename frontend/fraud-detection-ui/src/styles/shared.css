@@ -1,0 +1,49 @@
+:root{
+  --bg-dark: #07111f;
+  --card-bg: #101b2d;
+  --surface-raised: #162338;
+  --surface-glass: rgba(7, 18, 34, .92);
+  --muted: #94A3B8;
+  --text-soft: #CBD5E1;
+  --accent: #2563EB;
+  --accent-strong: #4F46E5;
+  --accent-2: #06B6D4;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --surface: #0f172a;
+  --panel-border: rgba(255,255,255,.1);
+  --text: #FFFFFF;
+  --page-gutter: 48px;
+  --surface-radius: 24px;
+  --control-radius: 12px;
+  --shadow-panel: 0 22px 60px rgba(0,0,0,.28);
+  --shadow-action: 0 18px 40px rgba(6, 21, 55, .28);
+}
+
+/* Common utilities */
+.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+
+.feedback{margin:0 0 18px;padding:12px 14px;border:1px solid transparent;border-radius:10px;font-size:14px;line-height:1.45}
+.feedback.error{background:rgba(239,68,68,.12);border-color:rgba(248,113,113,.35);color:#fecaca}
+.feedback.success{background:rgba(34,197,94,.12);border-color:rgba(74,222,128,.35);color:#bbf7d0}
+
+button,
+input,
+select,
+textarea{font:inherit}
+
+/* Global premium button styles */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:600}
+.btn svg{opacity:.95}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-strong));color:var(--text);box-shadow:var(--shadow-action)}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible{outline:2px solid #38BDF8;outline-offset:3px}
+
+.shared-table-wrap{overflow-x:auto;border:1px solid var(--panel-border);border-radius:var(--surface-radius);background:var(--card-bg);box-shadow:var(--shadow-panel)}
+.shared-table-wrap table{min-width:680px}

@@ -1,0 +1,125 @@
+<div class="register-page">
+
+  <div class="background">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+  </div>
+
+  <div class="form-panel">
+
+    <div class="brand">
+      <div class="brand-badge">🛡️ AI SHIELD SECURITY</div>
+      <h1 *ngIf="step === 'REGISTRATION'">Create Cardholder Account</h1>
+      <h1 *ngIf="step === 'OTP_VERIFICATION'">Verify Mobile Number</h1>
+      <p *ngIf="step === 'REGISTRATION'">Register with your mobile phone for real-time transaction protection and instant fraud alerts.</p>
+      <p *ngIf="step === 'OTP_VERIFICATION'">Enter the 6-digit security code dispatched via SMS to <strong>{{ otpDestination }}</strong>.</p>
+      
+      <div class="feedback" 
+           [class.error]="feedbackType === 'error'" 
+           [class.success]="feedbackType === 'success'" 
+           *ngIf="feedbackMessage" 
+           role="status" 
+           aria-live="polite">
+        {{ feedbackMessage }}
+      </div>
+    </div>
+
+    <!-- STEP 1: Registration Form -->
+    <form *ngIf="step === 'REGISTRATION'" class="register-form" (ngSubmit)="register()" #regForm="ngForm">
+
+      <div class="input-group">
+        <label>Full Name</label>
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="name"
+          placeholder="e.g. Rahul Sharma"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>Email Address</label>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="e.g. rahul@example.com"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>Mobile Number (For Bank Security Alerts)</label>
+        <input
+          type="tel"
+          name="phone"
+          [(ngModel)]="phone"
+          placeholder="+91 98111 22334"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Minimum 6 characters"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>Confirm Password</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          placeholder="Repeat your password"
+          required>
+      </div>
+
+      <button class="register-btn" type="submit" [disabled]="loading || !regForm.form.valid">
+        {{ loading ? 'Sending Security Code...' : 'Register & Verify Mobile' }}
+      </button>
+
+      <div class="extra">
+        <p>Already have an account? <a routerLink="/">Sign in</a></p>
+      </div>
+    </form>
+
+    <!-- STEP 2: Mobile OTP Verification Screen -->
+    <div *ngIf="step === 'OTP_VERIFICATION'" class="otp-verification-panel">
+      <div class="otp-instruction">
+        <span class="sms-icon">📱</span>
+        <span>A one-time verification code has been dispatched to your mobile number. Never share this code with anyone.</span>
+      </div>
+
+      <div class="input-group">
+        <label>6-Digit Security OTP</label>
+        <input
+          type="text"
+          name="otpCode"
+          [(ngModel)]="otpCode"
+          placeholder="• • • • • •"
+          maxlength="6"
+          class="otp-large-input"
+          autofocus>
+      </div>
+
+      <button class="register-btn" (click)="verifyOtp()" [disabled]="loading || !otpCode || otpCode.length !== 6">
+        {{ loading ? 'Verifying Security Code...' : 'Verify Mobile & Activate Protection' }}
+      </button>
+
+      <div class="resend-row">
+        <button type="button" class="btn-resend" (click)="resendOtp()" [disabled]="cooldownSeconds > 0 || loading">
+          {{ cooldownSeconds > 0 ? 'Resend code in ' + cooldownSeconds + 's' : '🔄 Resend SMS Code' }}
+        </button>
+        <button type="button" class="btn-back" (click)="step = 'REGISTRATION'">
+          Edit Mobile Number
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

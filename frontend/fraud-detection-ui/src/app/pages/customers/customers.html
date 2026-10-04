@@ -1,0 +1,128 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+  <app-navbar></app-navbar>
+
+  <div class="customers-page">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <div>
+        <h1>Customer Directory & Card Control</h1>
+        <p>Monitor registered cardholders, risk profiles, and manage card freeze/unblock controls.</p>
+      </div>
+    </div>
+
+    <!-- Notification message -->
+    <div *ngIf="actionMessage" class="action-alert">
+      {{ actionMessage }}
+    </div>
+
+    <div class="toolbar customer-toolbar">
+      <input [(ngModel)]="search" (ngModelChange)="applyFilters()" placeholder="Search customer name, email, or card..." aria-label="Search customers">
+      <select [(ngModel)]="risk" (ngModelChange)="applyFilters()" aria-label="Filter customers by risk">
+        <option value="All">All Risk Profiles</option>
+        <option value="Low">Low Risk</option>
+        <option value="Medium">Medium Risk</option>
+        <option value="High">High Risk / Flagged</option>
+      </select>
+      <button type="button" (click)="toggleSort()">Sort {{sortDirection === 'asc' ? 'A-Z' : 'Z-A'}}</button>
+    </div>
+
+    <div class="customer-table">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Mobile (SMS Alert)</th>
+            <th>Primary Card</th>
+            <th>Transactions</th>
+            <th>Fraud Risk Score</th>
+            <th>Card Status</th>
+            <th>Admin Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let customer of pagedCustomers">
+            <td (click)="selected = customer"><strong>{{customer.name}}</strong></td>
+            <td (click)="selected = customer">{{customer.email}}</td>
+            <td (click)="selected = customer">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span>{{customer.phone || '+91 98111 22334'}}</span>
+                <span class="pill-badge" [ngClass]="customer.mobileVerified !== false ? 'pill-verified' : 'pill-unverified'">
+                  {{ customer.mobileVerified !== false ? 'VERIFIED' : 'UNVERIFIED' }}
+                </span>
+              </div>
+            </td>
+            <td (click)="selected = customer">{{customer.card}}</td>
+            <td (click)="selected = customer">{{customer.transactions}} txns</td>
+            <td (click)="selected = customer">
+              <span [ngClass]="{
+                'fraud': customer.fraudScore >= 80,
+                'medium': customer.fraudScore >= 40 && customer.fraudScore < 80,
+                'safe': customer.fraudScore < 40
+              }">
+                {{customer.fraudScore}}%
+              </span>
+            </td>
+            <td (click)="selected = customer">
+              <span [ngClass]="customer.status === 'High' ? 'fraud' : 'safe'">
+                {{ customer.status === 'High' ? 'BLOCKED' : 'ACTIVE' }}
+              </span>
+            </td>
+            <td>
+              <button 
+                type="button" 
+                class="card-action-btn"
+                [class.btn-unblock]="customer.status === 'High'"
+                [class.btn-block]="customer.status !== 'High'"
+                (click)="toggleCardStatus(customer); $event.stopPropagation()">
+                {{ customer.status === 'High' ? 'Unblock Card' : 'Freeze Card' }}
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="!pagedCustomers.length"><td colspan="8" class="empty-state">No customers match your search or filters.</td></tr>
+
+        </tbody>
+
+      </table>
+      <div class="pagination">
+        <button (click)="changePage(-1)" [disabled]="page === 1">Previous</button>
+        <span>Page {{page}} of {{pageCount}}</span>
+        <button (click)="changePage(1)" [disabled]="page === pageCount">Next</button>
+      </div>
+
+      <!-- Customer Detail Modal -->
+      <div class="detail-panel" *ngIf="selected">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+          <div>
+            <h2 style="margin: 0;">{{selected.name}}</h2>
+            <small style="color: #94a3b8;">{{selected.email}} • {{selected.card}}</small>
+          </div>
+          <button (click)="selected = null" class="btn-close-modal">✕</button>
+        </div>
+
+        <div style="background: rgba(2, 6, 23, 0.6); padding: 14px; border-radius: 12px; margin-bottom: 16px;">
+          <p style="margin: 0 0 6px;"><strong>Fraud Risk Score:</strong> {{selected.fraudScore}}% ({{selected.status}} Risk)</p>
+          <p style="margin: 0 0 6px;"><strong>Lifetime Transactions:</strong> {{selected.transactions}}</p>
+          <p style="margin: 0;"><strong>Active Geolocation Activity:</strong> {{selected.locations.join(', ')}}</p>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" (click)="toggleCardStatus(selected); selected = null" class="card-action-btn" [class.btn-unblock]="selected.status === 'High'" [class.btn-block]="selected.status !== 'High'">
+            {{ selected.status === 'High' ? 'Unblock Customer Card' : 'Freeze Customer Card' }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<app-chatbot></app-chatbot>

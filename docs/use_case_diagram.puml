@@ -1,0 +1,160 @@
+@startuml
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam handwritten false
+skinparam defaultFontName "Segoe UI", Arial, sans-serif
+skinparam defaultFontSize 12
+
+' Color Palette - Professional Academic Theme
+skinparam ArrowColor #2b5797
+skinparam ArrowThickness 1.2
+skinparam ActorBackgroundColor #e8f1f5
+skinparam ActorBorderColor #1b365d
+skinparam ActorFontColor #1b365d
+skinparam ActorFontStyle bold
+
+skinparam usecase {
+    BackgroundColor #ffffff
+    BorderColor #2b5797
+    BorderThickness 1.4
+    FontColor #0f2537
+    FontSize 12
+    StereotypeFontColor #555555
+}
+
+skinparam rectangle {
+    BackgroundColor #f8fafc
+    BorderColor #64748b
+    BorderThickness 1.8
+    FontColor #0f172a
+    FontSize 14
+    FontStyle bold
+}
+
+left to right direction
+
+' ==========================================
+' ACTORS DEFINITION
+' ==========================================
+actor "Cardholder / User" as Cardholder << Primary >> #e0f2fe
+actor "Administrator" as Admin << Primary >> #fef3c7
+
+actor "SMS / Notification\nGateway" as SMSGateway << Secondary >> #f1f5f9
+actor "Biometric Device /\nBrowser (FIDO2/WebAuthn)" as BioDevice << Secondary >> #f1f5f9
+
+' ==========================================
+' SYSTEM BOUNDARY
+' ==========================================
+rectangle "AI Shield – Card Fraud Detection & Step-Up Verification System" {
+
+    ' --- Common / Core Security Use Cases ---
+    package "Core Security & Access" #e2e8f0 {
+        usecase "Authenticate User\n(JWT / Credentials)" as UC_Auth #f1f5f9
+        usecase "Verify Mobile Number" as UC_VerifyMobile
+        usecase "Perform Biometric /\nPasskey Verification" as UC_BioVerify #ecfdf5
+    }
+
+    ' --- Cardholder Use Cases ---
+    package "Cardholder Services" #f0fdf4 {
+        usecase "Register Account" as UC_Register
+        usecase "Login to System" as UC_UserLogin
+        usecase "View Cardholder Dashboard" as UC_UserDash
+        usecase "Manage Protected Cards\n(Lock/Unlock & Limits)" as UC_ManageCards
+        usecase "View Personal Transactions" as UC_UserTx
+        usecase "Receive Fraud Alert" as UC_ReceiveAlert
+        usecase "Verify Suspicious\nTransaction (Step-Up)" as UC_VerifyTx #fef08a
+        usecase "Confirm Legitimate\nTransaction" as UC_ConfirmTx
+        usecase "Report Unauthorized\nFraud Attempt" as UC_ReportFraud #fee2e2
+        usecase "Freeze Compromised Card" as UC_FreezeCard #fecaca
+        usecase "View Verification History" as UC_History
+        usecase "Manage User Profile" as UC_Profile
+        usecase "Configure Security Settings" as UC_Settings
+    }
+
+    ' --- External Notification Triggers ---
+    package "Notification & Outbound Dispatch" #f8fafc {
+        usecase "Send Security OTP" as UC_SendOTP
+        usecase "Send Fraud Alert SMS" as UC_SendFraudSMS
+        usecase "Send Verification Link" as UC_SendVerifLink
+        usecase "Send Transaction Alert" as UC_SendTxAlert
+    }
+
+    ' --- Administrator Use Cases ---
+    package "Admin & Investigation Center" #fffbeb {
+        usecase "Admin Login" as UC_AdminLogin
+        usecase "View Admin Dashboard\n(Operations Center)" as UC_AdminDash
+        usecase "Manage Users & Cards" as UC_ManageUsers
+        usecase "View Audited Transactions" as UC_AdminTx
+        usecase "Monitor Fraud Alerts" as UC_MonitorAlerts
+        usecase "Investigate Fraud Case" as UC_Investigate #fee2e2
+        usecase "View Analytics &\nRisk Hotspots" as UC_Analytics
+        usecase "Monitor Live Transactions" as UC_LiveTrack
+        usecase "Generate Audit Reports\n(CSV / JSON Export)" as UC_Reports
+        usecase "Manage Fraud Detection\nRules & Thresholds" as UC_AdminSettings
+        usecase "View System Audit Logs" as UC_AuditLogs
+    }
+}
+
+' ==========================================
+' CARDHOLDER ASSOCIATIONS & RELATIONSHIPS
+' ==========================================
+Cardholder -- UC_Register
+Cardholder -- UC_UserLogin
+Cardholder -- UC_UserDash
+Cardholder -- UC_ManageCards
+Cardholder -- UC_UserTx
+Cardholder -- UC_ReceiveAlert
+Cardholder -- UC_VerifyTx
+Cardholder -- UC_History
+Cardholder -- UC_Profile
+Cardholder -- UC_Settings
+
+UC_Register .> UC_VerifyMobile : <<include>>
+UC_VerifyMobile .> UC_SendOTP : <<include>>
+
+UC_UserLogin .> UC_Auth : <<include>>
+UC_VerifyTx .> UC_Auth : <<include>>
+UC_VerifyTx .> UC_BioVerify : <<include>>
+UC_VerifyTx .> UC_SendVerifLink : <<include>>
+
+UC_ConfirmTx .> UC_VerifyTx : <<extend>>
+UC_ReportFraud .> UC_VerifyTx : <<extend>>
+UC_ReportFraud .> UC_ReceiveAlert : <<extend>>
+UC_FreezeCard .> UC_ReportFraud : <<extend>>
+
+UC_ReceiveAlert .> UC_SendFraudSMS : <<include>>
+UC_UserTx .> UC_SendTxAlert : <<include>>
+
+' ==========================================
+' ADMINISTRATOR ASSOCIATIONS & RELATIONSHIPS
+' ==========================================
+Admin -- UC_AdminLogin
+Admin -- UC_AdminDash
+Admin -- UC_ManageUsers
+Admin -- UC_AdminTx
+Admin -- UC_MonitorAlerts
+Admin -- UC_Investigate
+Admin -- UC_Analytics
+Admin -- UC_LiveTrack
+Admin -- UC_Reports
+Admin -- UC_AdminSettings
+Admin -- UC_AuditLogs
+
+UC_AdminLogin .> UC_Auth : <<include>>
+UC_Investigate .> UC_MonitorAlerts : <<include>>
+UC_Reports .> UC_AdminTx : <<include>>
+UC_Analytics .> UC_AdminTx : <<include>>
+
+' ==========================================
+' EXTERNAL SYSTEM & DEVICE ASSOCIATIONS
+' ==========================================
+UC_SendOTP -- SMSGateway
+UC_SendFraudSMS -- SMSGateway
+UC_SendVerifLink -- SMSGateway
+UC_SendTxAlert -- SMSGateway
+
+UC_BioVerify -- BioDevice
+
+@enduml

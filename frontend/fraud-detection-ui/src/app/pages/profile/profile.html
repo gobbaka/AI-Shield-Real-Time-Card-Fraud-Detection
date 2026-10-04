@@ -1,0 +1,95 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+  <app-navbar></app-navbar>
+
+  <div class="profile-page">
+
+    <div class="page-header">
+      <div>
+        <h1>My Profile</h1>
+        <p>Update your account details and keep your AI fraud dashboard secure.</p>
+        <div class="feedback" [class.error]="feedbackType === 'error'" [class.success]="feedbackType === 'success'" *ngIf="feedbackMessage" role="status" aria-live="polite">{{ feedbackMessage }}</div>
+      </div>
+      <button class="save-btn" (click)="saveProfile()" [disabled]="loading">
+        {{ loading ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+
+    <div class="profile-grid">
+
+      <div class="profile-card">
+        <div class="avatar-section">
+          <div class="avatar">{{name?.charAt(0) || 'P'}}</div>
+          <div>
+            <h2>{{name}}</h2>
+            <p>{{role}}</p>
+          </div>
+        </div>
+
+        <div class="profile-stats">
+          <div>
+            <span>12</span>
+            <small>Active Alerts</small>
+          </div>
+          <div>
+            <span>24</span>
+            <small>Transactions Monitored</small>
+          </div>
+          <div>
+            <span>5</span>
+            <small>Model Updates</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-card">
+        <h3>Profile Information</h3>
+
+        <form class="details-form" (ngSubmit)="saveProfile()" #profileForm="ngForm" novalidate>
+
+          <div class="input-group">
+            <label for="name">Full Name</label>
+            <input id="name" type="text" name="name" [(ngModel)]="name" #nameCtrl="ngModel" required aria-required="true" />
+            <div class="field-error" *ngIf="nameCtrl.invalid && nameCtrl.touched"><small>Full name is required.</small></div>
+          </div>
+
+          <div class="input-group">
+            <label for="email">Email Address</label>
+            <input id="email" type="email" name="email" [(ngModel)]="email" #emailCtrl="ngModel" required aria-required="true" />
+            <div class="field-error" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+              <small *ngIf="emailCtrl.errors?.['required']">Email is required.</small>
+              <small *ngIf="emailCtrl.errors?.['email']">Enter a valid email address.</small>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Role</label>
+            <input type="text" name="role" [(ngModel)]="role" />
+          </div>
+
+          <div class="input-row">
+            <div class="input-group">
+              <label>Phone</label>
+              <input type="text" name="phone" [(ngModel)]="phone" />
+            </div>
+            <div class="input-group">
+              <label>Location</label>
+              <input type="text" name="location" [(ngModel)]="location" />
+            </div>
+          </div>
+
+          <div class="input-group full-width">
+            <label>About</label>
+            <textarea name="bio" [(ngModel)]="bio" rows="4"></textarea>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

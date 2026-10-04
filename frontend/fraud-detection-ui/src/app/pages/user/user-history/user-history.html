@@ -1,0 +1,56 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+  <app-navbar></app-navbar>
+
+  <div class="user-history-page">
+
+    <div class="page-title-row">
+      <div>
+        <h1>Step-Up Verification History</h1>
+        <p>Immutable audit trail of your biometric and device authorizations for card security.</p>
+      </div>
+    </div>
+
+    <!-- History Timeline / Table -->
+    <div class="table-card">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Audit ID</th>
+            <th>Verification Request</th>
+            <th>Transaction Ref</th>
+            <th>Merchant & Location</th>
+            <th>Amount</th>
+            <th>Authentication Method</th>
+            <th>Decision / Outcome</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of historyList">
+            <td><code>{{ item.id }}</code></td>
+            <td><code>{{ item.requestId }}</code></td>
+            <td><code>{{ item.transactionRef }}</code></td>
+            <td><strong>{{ item.merchant }}</strong> ({{ item.location }})</td>
+            <td class="amount-cell">{{ item.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+            <td>
+              <span class="method-tag">{{ item.method }}</span>
+            </td>
+            <td>
+              <span class="decision-pill" [class.pill-confirmed]="item.decision === 'OWNER_CONFIRMED'" [class.pill-rejected]="item.decision === 'OWNER_REJECTED'">
+                {{ item.decision === 'OWNER_CONFIRMED' ? '🔐 AUTHORIZED' : '🛑 REJECTED / BLOCKED' }}
+              </span>
+            </td>
+            <td>{{ item.verifiedAt }}</td>
+          </tr>
+          <tr *ngIf="!historyList.length">
+            <td colspan="8" style="text-align: center; color: #94a3b8; padding: 32px;">No past verification records found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+<app-chatbot></app-chatbot>

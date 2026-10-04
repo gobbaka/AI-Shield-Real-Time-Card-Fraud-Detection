@@ -1,0 +1,344 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+    <app-navbar></app-navbar>
+
+    <main class="dashboard-page">
+
+        <!-- Page Header / Command Center Hero -->
+        <section class="page-hero">
+            <div class="hero-left">
+                <div class="hero-tag-row">
+                    <span class="live-pill">
+                        <span class="live-dot"></span>
+                        LIVE STREAMING
+                    </span>
+                    <span class="version-tag">AI Engine v3.4</span>
+                </div>
+                <h1 class="page-title">Real-Time Fraud Command Center</h1>
+                <p class="page-subtitle">AI Ensemble Engine & Heuristic Rule Evaluator actively scoring high-velocity card transactions.</p>
+            </div>
+
+            <div class="hero-right">
+                <div class="engine-badge">
+                    <span class="status-indicator-dot"></span>
+                    <div class="engine-text">
+                        <span class="engine-name">AI Shield Engine Active</span>
+                        <span class="engine-accuracy">98.4% Precision Baseline</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons-group">
+                    <button type="button" class="btn-primary-action" (click)="openSimulation()" aria-label="Authorize / Ingest Transaction">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Authorize / Ingest Transaction</span>
+                    </button>
+
+                    <button type="button" class="btn-secondary-action" (click)="generateReport()" aria-label="Export Audit Report">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Export Report (CSV)</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feedback Alert Toast Message -->
+        <div class="report-feedback-toast" *ngIf="reportMessage" role="status" aria-live="polite">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>{{ reportMessage }}</span>
+        </div>
+
+        <!-- 4-Column Stat Cards Grid -->
+        <section class="stats-grid" aria-label="Core Metrics">
+            
+            <!-- Stat Card 1 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Volume Monitored</span>
+                    <div class="stat-icon-wrap icon-blue">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                            <path d="M2 10h20" stroke="currentColor" stroke-width="1.6"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value">{{ transactions.length | number }}</div>
+                <div class="stat-footer">
+                    <span class="trend-badge positive">▲ Stream Active</span>
+                    <span class="stat-meta">Total Card Swipes</span>
+                </div>
+            </div>
+
+            <!-- Stat Card 2 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Active Fraud Alerts</span>
+                    <div class="stat-icon-wrap icon-red">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M12 22c1.1 0 2-.9 2-2H10c0 1.1.9 2 2 2z" fill="currentColor"/>
+                            <path d="M18 16v-5c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" stroke="currentColor" stroke-width="1"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value text-red">{{ fraudAlertCount }}</div>
+                <div class="stat-footer">
+                    <span class="trend-badge negative">Requires Review</span>
+                    <span class="stat-meta">Pending Resolution</span>
+                </div>
+            </div>
+
+            <!-- Stat Card 3 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Safe Approval Rate</span>
+                    <div class="stat-icon-wrap icon-green">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M12 2l7 4v6c0 5-3.58 9.74-7 11-3.42-1.26-7-6-7-11V6l7-4z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value text-green">{{ safeTransactionRate }}%</div>
+                <div class="stat-footer">
+                    <span class="trend-badge positive">Optimal Baseline</span>
+                    <span class="stat-meta">Low Friction UX</span>
+                </div>
+            </div>
+
+            <!-- Stat Card 4 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">System Health & Trust</span>
+                    <div class="stat-icon-wrap icon-purple">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value text-cyan">{{ trustScore }}%</div>
+                <div class="stat-footer">
+                    <span class="trend-badge positive">Stable Scoring</span>
+                    <span class="stat-meta">Anomaly Confidence</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Main Content Grid -->
+        <div class="content-layout-grid">
+
+            <!-- Left Panel: Recent Ingested Transactions Table -->
+            <section class="panel-card table-panel" aria-label="Recent Transactions">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title">Recent Ingested Transactions</h2>
+                        <span class="panel-subtitle">Live real-time feed sorted by timestamp</span>
+                    </div>
+                    <button type="button" class="btn-link-action" (click)="viewAllTransactions()" aria-label="View all transactions">
+                        <span>View All</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="enterprise-table">
+                        <thead>
+                            <tr>
+                                <th>Ref ID</th>
+                                <th>Cardholder</th>
+                                <th>Amount</th>
+                                <th>Risk Score</th>
+                                <th>Decision</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let transaction of recentTransactions">
+                                <td>
+                                    <span class="tx-ref">{{ transaction.id }}</span>
+                                </td>
+                                <td>
+                                    <div class="cardholder-cell">
+                                        <span class="cardholder-name">{{ transaction.customer }}</span>
+                                        <small class="cardholder-loc">{{ transaction.location }}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="tx-amount">{{ transaction.amount | currency:'INR':'symbol':'1.0-0' }}</span>
+                                </td>
+                                <td>
+                                    <div class="risk-score-wrap">
+                                        <div class="risk-pill" [class.risk-low]="transaction.risk === 'Low'" [class.risk-med]="transaction.risk === 'Medium'" [class.risk-high]="transaction.risk === 'High'">
+                                            <span class="risk-dot"></span>
+                                            <span>{{ transaction.riskScore }}/100</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge" [class.status-approved]="transaction.status === 'Approved'" [class.status-review]="transaction.status === 'Review'" [class.status-blocked]="transaction.status === 'Blocked'">
+                                        {{ transaction.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr *ngIf="!recentTransactions.length">
+                                <td colspan="5" class="empty-state-cell">No transactions recorded yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Right Panel: ML Anomaly Model Engine Telemetry -->
+            <section class="panel-card model-panel" aria-label="Machine Learning Telemetry">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title">ML Anomaly Engine</h2>
+                        <span class="panel-subtitle">RandomForest + Heuristics</span>
+                    </div>
+                    <span class="model-badge">Active</span>
+                </div>
+
+                <div class="model-telemetry-body">
+                    
+                    <!-- Circular Accuracy Gauge -->
+                    <div class="accuracy-gauge-card">
+                        <div class="gauge-center">
+                            <span class="gauge-value">98.4%</span>
+                            <span class="gauge-label">Ensemble Precision</span>
+                        </div>
+                    </div>
+
+                    <!-- Telemetry Metrics List -->
+                    <div class="telemetry-list">
+                        <div class="telemetry-item">
+                            <span class="telemetry-key">Inference Latency</span>
+                            <span class="telemetry-val text-green">0.8 ms</span>
+                        </div>
+                        <div class="telemetry-item">
+                            <span class="telemetry-key">Feature Dimensions</span>
+                            <span class="telemetry-val">18 Signals</span>
+                        </div>
+                        <div class="telemetry-item">
+                            <span class="telemetry-key">Geo-Velocity Entropy</span>
+                            <span class="telemetry-val text-cyan">Calibrated</span>
+                        </div>
+                        <div class="telemetry-item">
+                            <span class="telemetry-key">Cold-Start Fallback</span>
+                            <span class="telemetry-val text-green">Online</span>
+                        </div>
+                    </div>
+
+                    <div class="model-footer-note">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        </svg>
+                        <span>Zero biometric exposure (FIDO2 challenge)</span>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Real-World Transaction Authorization Terminal Modal -->
+        <div class="simulation-modal-backdrop" *ngIf="showSimulation" role="dialog" aria-modal="true" aria-labelledby="terminal-title">
+            <div class="simulation-modal-card">
+                <div class="simulation-header">
+                    <div>
+                        <h3 id="terminal-title" class="sim-title">💳 Real-Time Payment Ingestion & AI Scoring</h3>
+                        <p class="sim-desc">Dispatch a live payment swipe to evaluate against the hybrid rules and ML anomaly engine.</p>
+                    </div>
+                    <button type="button" class="close-icon-btn" (click)="closeSimulation()" aria-label="Close modal">✕</button>
+                </div>
+
+                <!-- Test Attack Scenarios Presets -->
+                <div class="preset-strip">
+                    <span class="preset-label">Attack Presets:</span>
+                    <button type="button" class="preset-btn preset-red" (click)="setPreset('crypto')">🪙 Crypto Spike (₹1.85L)</button>
+                    <button type="button" class="preset-btn preset-amber" (click)="setPreset('travel')">✈️ Velocity Travel (Dubai)</button>
+                    <button type="button" class="preset-btn preset-purple" (click)="setPreset('velocity')">⚡ Bot Spike (₹2.4L)</button>
+                    <button type="button" class="preset-btn preset-green" (click)="setPreset('safe')">☕ Safe Daily (₹3.5K)</button>
+                </div>
+
+                <div class="terminal-form-grid">
+                    <div class="form-field">
+                        <label>Cardholder Name</label>
+                        <input type="text" [(ngModel)]="simCustomer" placeholder="e.g. Rahul Sharma" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Card Last 4 Digits</label>
+                        <input type="text" [(ngModel)]="simCard" placeholder="e.g. 4721" maxlength="4" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Amount (₹ INR)</label>
+                        <input type="number" [(ngModel)]="simAmount" placeholder="125000" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Merchant Category</label>
+                        <select [(ngModel)]="simCategory">
+                            <option value="RETAIL">Retail & Supermarket</option>
+                            <option value="ELECTRONICS">Consumer Electronics</option>
+                            <option value="CRYPTO">Crypto / P2P Exchange (High Risk)</option>
+                            <option value="JEWELRY">Luxury Jewelry / Gold</option>
+                            <option value="TRAVEL">International Airlines & Hotels</option>
+                            <option value="FOREX">Foreign Exchange Wire</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Terminal Geolocation</label>
+                        <input type="text" [(ngModel)]="simLocation" placeholder="e.g. London (UK)" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Device Footprint / IP</label>
+                        <input type="text" [(ngModel)]="simDevice" placeholder="e.g. DEV-TOR-PROXY-99" />
+                    </div>
+                </div>
+
+                <button type="button" class="execute-eval-btn" (click)="runSimulation()" [disabled]="isAnalyzing">
+                    <span *ngIf="!isAnalyzing">⚡ Authorize & Run Real-Time AI Fraud Evaluation</span>
+                    <span *ngIf="isAnalyzing">Analyzing Risk with Machine Learning...</span>
+                </button>
+
+                <!-- Live Result Analysis Card -->
+                <div class="analysis-card" *ngIf="analysisResult" [class.res-approved]="analysisResult.status === 'Approved'" [class.res-review]="analysisResult.status === 'Review'" [class.res-blocked]="analysisResult.status === 'Blocked'">
+                    <div class="analysis-head">
+                        <div>
+                            <span class="decision-tag">{{ analysisResult.decision }} ({{ analysisResult.status }})</span>
+                            <h4 class="risk-score-heading">Risk Score: {{ analysisResult.riskScore }}/100 ({{ analysisResult.riskLevel }} Risk)</h4>
+                        </div>
+                        <div class="score-progress-bar">
+                            <div class="progress-fill" [style.width.%]="analysisResult.riskScore"></div>
+                        </div>
+                    </div>
+
+                    <div class="reasons-box" *ngIf="analysisResult.reasons?.length">
+                        <strong>Explainable AI Factors:</strong>
+                        <ul>
+                            <li *ngFor="let reason of analysisResult.reasons">{{ reason }}</li>
+                        </ul>
+                    </div>
+
+                    <small class="ref-sub">
+                        Ref: {{ analysisResult.transactionId }} • Synced with Banking Ledger & H2 Database
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<app-chatbot></app-chatbot>

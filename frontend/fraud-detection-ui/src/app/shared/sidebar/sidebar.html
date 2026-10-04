@@ -1,0 +1,138 @@
+<div class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l7 4v6c0 5-3.58 9.74-7 11-3.42-1.26-7-6-7-11V6l7-4z" fill="currentColor"/></svg>
+        </div>
+        <div>
+            <h2>AI Shield</h2>
+            <span>{{ isAdmin ? 'Fraud Operations' : 'Cardholder Portal' }}</span>
+        </div>
+    </div>
+
+    <!-- ADMIN NAVIGATION MENU -->
+    <ul *ngIf="isAdmin">
+        <li>
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20.5V11h14v9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                Dashboard
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/transactions" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                Transactions
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/fraud-alert" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22c1.1 0 2-.9 2-2H10c0 1.1.9 2 2 2z" fill="currentColor"/><path d="M18 16v-5c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" stroke="currentColor" stroke-width="0.4"/></svg>
+                </span>
+                Fraud Alerts
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/live-tracking" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s8-5.5 8-11a8 8 0 1 0-16 0c0 5.5 8 11 8 11z" stroke="currentColor" stroke-width="1.5" fill="currentColor"/><circle cx="12" cy="10" r="2.5" fill="#fff"/></svg>
+                </span>
+                Live Tracking
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/analytics" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3v18h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="7" y="12" width="2" height="6" rx="1" fill="currentColor"/><rect x="11" y="8" width="2" height="10" rx="1" fill="currentColor"/><rect x="15" y="4" width="2" height="14" rx="1" fill="currentColor"/></svg>
+                </span>
+                Analytics
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/customers" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                Customers
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/settings" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="currentColor" stroke-width="1.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 1 1 2.3 17.88l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09c.6 0 1.1-.35 1.51-1a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 6.6 2.3l.06.06c.44.44 1 .67 1.6.62.5 0 .96-.2 1.31-.54.35-.34.56-.81.56-1.31V2a2 2 0 1 1 4 0v.09c0 .5.21.97.56 1.31.35.34.81.54 1.31.54.6.05 1.16-.18 1.6-.62l.06-.06A2 2 0 1 1 21.7 6.6l-.06.06c-.44.44-.67 1-.62 1.6 0 .5.2.96.54 1.31.34.35.81.56 1.31.56H21a2 2 0 1 1 0 4h-.09c-.5 0-.97.21-1.31.56-.35.34-.54.81-.54 1.31v.09z" fill="currentColor"/></svg>
+                </span>
+                Settings
+            </a>
+        </li>
+    </ul>
+
+    <!-- CARDHOLDER / USER NAVIGATION MENU -->
+    <ul *ngIf="isUser">
+        <li>
+            <a class="nav-link" routerLink="/user/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20.5V11h14v9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                Overview
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/user/cards" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                My Cards
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/user/transactions" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 14l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                My Transactions
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/user/alerts" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22c1.1 0 2-.9 2-2H10c0 1.1.9 2 2 2z" fill="currentColor"/><path d="M18 16v-5c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" stroke="currentColor" stroke-width="0.4"/></svg>
+                </span>
+                Fraud & Verification
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/user/history" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                Verification History
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" routerLink="/profile" routerLinkActive="active">
+                <span aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                My Profile
+            </a>
+        </li>
+    </ul>
+
+    <div class="bottom-card">
+        <h4>{{ isAdmin ? 'AI Shield Engine' : 'Card Security' }}</h4>
+        <p>{{ isAdmin ? 'Monitoring Active' : 'Zero-Biometric Protected' }}</p>
+        <div class="online">
+            <span></span>
+            {{ isAdmin ? 'Admin Operations' : 'Active Cardholder' }}
+        </div>
+        <button type="button" class="btn-role-switch" (click)="switchRole()" [disabled]="isSwitching" title="Quickly switch between Admin and Cardholder view for testing">
+            <span *ngIf="!isSwitching">🔄 Switch to {{ isAdmin ? 'Cardholder (Priya)' : 'Admin (Pradeep)' }}</span>
+            <span *ngIf="isSwitching">Switching view...</span>
+        </button>
+    </div>
+
+</div>

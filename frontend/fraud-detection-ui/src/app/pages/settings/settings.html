@@ -1,0 +1,147 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+  <app-navbar></app-navbar>
+
+  <div class="settings-page">
+
+    <div class="page-title-row">
+      <div>
+        <h1>System Settings & Engine Tuning</h1>
+        <p>Configure AI detection sensitivity, automated action thresholds, and behavioral fraud rules.</p>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span *ngIf="saved" class="saved-badge">✓ Changes Saved Successfully</span>
+        <button class="btn btn-primary save-btn" (click)="save()">Save Settings</button>
+        <button class="btn btn-ghost" type="button" (click)="reset()">Reset to Defaults</button>
+      </div>
+    </div>
+
+    <div class="settings-grid-layout">
+
+      <!-- General System Toggles -->
+      <div class="settings-card">
+        <h3 class="card-heading">⚙️ General & AI Automation</h3>
+
+        <div class="setting">
+          <div>
+            <strong>Dark Theme</strong>
+            <p>Toggle high-contrast cybersecurity dark mode</p>
+          </div>
+          <input type="checkbox" [(ngModel)]="settings.darkMode" class="toggle-switch">
+        </div>
+
+        <div class="setting">
+          <div>
+            <strong>Real-Time Alert Notifications</strong>
+            <p>Deliver audio & banner alerts for flagged transactions</p>
+          </div>
+          <input type="checkbox" [(ngModel)]="settings.notifications" class="toggle-switch">
+        </div>
+
+        <div class="setting">
+          <div>
+            <strong>AI Machine Learning Scoring</strong>
+            <p>Enable Random Forest ML scoring model alongside rule engine</p>
+          </div>
+          <input type="checkbox" [(ngModel)]="settings.aiDetection" class="toggle-switch">
+        </div>
+
+        <div class="setting">
+          <div>
+            <strong>Auto-Block Critical Fraud</strong>
+            <p>Automatically block transactions exceeding the critical risk threshold</p>
+          </div>
+          <input type="checkbox" [(ngModel)]="settings.autoBlock" class="toggle-switch">
+        </div>
+
+        <div class="setting threshold-setting">
+          <div>
+            <strong>Auto-Block Risk Threshold</strong>
+            <p>Transactions scoring above this percentage will be automatically blocked</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <input type="range" min="50" max="100" [(ngModel)]="settings.threshold" class="slider-input">
+            <strong class="threshold-display">{{settings.threshold}}%</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Behavioral Rule Engine Configuration -->
+      <div class="settings-card">
+        <h3 class="card-heading">🛡️ Behavioral Fraud Rules</h3>
+        <p style="color: #94a3b8; font-size: 13px; margin: 0 0 16px;">Tuned parameters for AI Shield heuristic anomaly detectors:</p>
+
+        <div class="rule-item" *ngFor="let rule of rules">
+          <div class="rule-info">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="rule-badge">{{ rule.category }}</span>
+              <strong style="color: #fff; font-size: 14px;">{{ rule.name }}</strong>
+            </div>
+            <p style="margin: 4px 0 0; color: #94a3b8; font-size: 12px;">{{ rule.description }}</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <input type="checkbox" [(ngModel)]="rule.enabled" class="toggle-switch">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 🧠 Active Machine Learning Model Card & Governance -->
+    <div class="settings-card" style="margin-top: 24px; border: 1px solid rgba(56, 189, 248, 0.3); background: rgba(15, 23, 42, 0.9);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">🧠</span>
+          <div>
+            <h3 style="margin: 0; color: #f8fafc; font-size: 16px;">Active ML Model Card & AI Governance</h3>
+            <p style="margin: 2px 0 0 0; font-size: 12px; color: #94a3b8;">Real-time tensor inference powered by Microsoft ONNX Runtime (Native C++/SIMD)</p>
+          </div>
+        </div>
+        <span style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">
+          ● ACTIVE IN PRODUCTION
+        </span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+        <div style="background: #1e293b; padding: 12px 14px; border-radius: 8px; border: 1px solid #334155;">
+          <div style="font-size: 11px; color: #94a3b8;">MODEL IDENTIFIER</div>
+          <strong style="color: #38bdf8; font-size: 14px;">RandomForest-v3.0-Production</strong>
+        </div>
+        <div style="background: #1e293b; padding: 12px 14px; border-radius: 8px; border: 1px solid #334155;">
+          <div style="font-size: 11px; color: #94a3b8;">INFERENCE RUNTIME</div>
+          <strong style="color: #a78bfa; font-size: 14px;">ONNX Runtime 1.19 (In-Process)</strong>
+        </div>
+        <div style="background: #1e293b; padding: 12px 14px; border-radius: 8px; border: 1px solid #334155;">
+          <div style="font-size: 11px; color: #94a3b8;">EMPIRICAL PR-AUC</div>
+          <strong style="color: #4ade80; font-size: 14px;">1.0000 (100% Avg Precision)</strong>
+        </div>
+        <div style="background: #1e293b; padding: 12px 14px; border-radius: 8px; border: 1px solid #334155;">
+          <div style="font-size: 11px; color: #94a3b8;">INFERENCE LATENCY</div>
+          <strong style="color: #fbbf24; font-size: 14px;">&lt; 1.5 ms / Transaction</strong>
+        </div>
+      </div>
+
+      <!-- Feature Vector Mapping -->
+      <div style="background: #1e293b; padding: 14px; border-radius: 8px; border: 1px solid #334155;">
+        <div style="font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 8px;">10-Dimensional Feature Signature:</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">1. amount_norm</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">2. amount_ratio</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">3. time_entropy</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">4. merchant_risk</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">5. velocity_10m</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">6. velocity_1h</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">7. impossible_travel</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">8. cross_city</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">9. cold_start</span>
+          <span style="background: #0f172a; border: 1px solid #475569; color: #94a3b8; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace;">10. rule_score_norm</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<app-chatbot></app-chatbot>

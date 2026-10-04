@@ -1,0 +1,43 @@
+{
+  "model_name": "RandomForest-v3.0-Production",
+  "algorithm": "Random Forest Ensemble (Balanced Subsample)",
+  "framework": "ONNX Runtime v1.19 / Scikit-Learn v1.8",
+  "input_tensor_name": "float_input",
+  "input_shape": [
+    1,
+    10
+  ],
+  "feature_names": [
+    "amount_norm",
+    "amount_ratio",
+    "time_entropy",
+    "merchant_risk",
+    "velocity_10m",
+    "velocity_1h",
+    "impossible_travel",
+    "cross_city",
+    "cold_start",
+    "rule_score_norm"
+  ],
+  "metrics": {
+    "model_name": "RandomForest_Ensemble",
+    "precision": 1.0,
+    "recall": 0.9615,
+    "f1_score": 0.9804,
+    "roc_auc": 1.0,
+    "pr_auc": 1.0,
+    "confusion_matrix": {
+      "true_negative": 14948,
+      "false_positive": 0,
+      "false_negative": 2,
+      "true_positive": 50
+    },
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0385
+  },
+  "decision_thresholds": {
+    "low_risk_max": 0.39,
+    "medium_risk_max": 0.79,
+    "high_risk_min": 0.8
+  }
+}

@@ -1,0 +1,12 @@
+[
+  "amount_norm",
+  "amount_ratio",
+  "time_entropy",
+  "merchant_risk",
+  "velocity_10m",
+  "velocity_1h",
+  "impossible_travel",
+  "cross_city",
+  "cold_start",
+  "rule_score_norm"
+]

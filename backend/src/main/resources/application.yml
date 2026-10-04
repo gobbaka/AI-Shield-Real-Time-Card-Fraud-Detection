@@ -1,0 +1,92 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ai-shield-fraud-detection
+  datasource:
+    url: jdbc:h2:mem:frauddb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  flyway:
+    enabled: false # In-memory H2 uses Hibernate DDL; Flyway executes for PostgreSQL prod
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    expiration-ms: 86400000 # 24 hours
+  cors:
+    allowed-origins:
+      - "http://localhost:4200"
+      - "http://127.0.0.1:4200"
+  fraud:
+    default-threshold: 80
+    auto-block-enabled: true
+    ml-weight: 0.5
+    rule-weight: 0.5
+  sms:
+    provider: ${SMS_PROVIDER:auto} # Options: auto, fast2sms, twilio, mock
+    fast2sms:
+      api-key: ${FAST2SMS_API_KEY:}
+      otp-id: ${FAST2SMS_OTP_ID:}
+      route: ${FAST2SMS_ROUTE:auto} # Options: auto, q (Quick SMS), otp (bulkV2 OTP)
+    twilio:
+      account-sid: ${TWILIO_ACCOUNT_SID:}
+      auth-token: ${TWILIO_AUTH_TOKEN:}
+      from-phone: ${TWILIO_FROM_PHONE:${TWILIO_PHONE_NUMBER:+15005550006}}
+  verification:
+    base-url: "http://localhost:4200/verify"
+
+aishield:
+  auth:
+    otp-enabled: ${AISHIELD_AUTH_OTP_ENABLED:false} # Temporarily disabled per user request; re-enable via AISHIELD_AUTH_OTP_ENABLED=true when ready
+    allow-demo-otp-bypass: false # Master demo OTP strictly disabled across all environments
+  security:
+    vault-key: ${AISHIELD_VAULT_KEY:} # Configurable 256-bit AES key for database-layer PAN encryption
+
+logging:
+  level:
+    com.aishield.fraud: INFO
+    org.springframework.security: WARN
+
+---
+# ===================================================================
+# PRODUCTION PROFILE: PostgreSQL Persistence & Hardened Security
+# Activated via: -Dspring.profiles.active=prod
+# ===================================================================
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/aishield_fraud}
+    driverClassName: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+aishield:
+  auth:
+    allow-demo-otp-bypass: false # Master demo OTP strictly disabled in production
+

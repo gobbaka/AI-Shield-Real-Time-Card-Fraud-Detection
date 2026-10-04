@@ -1,0 +1,343 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+<div class="navbar-wrapper">
+    <app-navbar></app-navbar>
+</div>
+    <div class="transactions-page">
+
+        <!-- Header -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>Transaction Monitoring</h1>
+
+                <p>
+                    Monitor every card transaction processed by the AI Fraud Detection System.
+                </p>
+
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="export-btn" (click)="openNewTxModal()" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; border: none; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                    <span>⚡</span> Process New Transaction
+                </button>
+                <button class="export-btn" (click)="exportReport()">
+                    ⬇ Export Report
+                </button>
+            </div>
+
+        </div>
+
+        <!-- View Navigation Tabs -->
+        <div class="view-tabs">
+            <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'transactions'" (click)="switchTab('transactions')">
+                💳 Card Transactions ({{transactions.length}})
+            </button>
+            <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'audit-logs'" (click)="switchTab('audit-logs')">
+                📜 Immutable Audit Logs ({{totalAuditLogs || 'Trail'}})
+            </button>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 1: TRANSACTIONS VIEW                       -->
+        <!-- ============================================== -->
+        <ng-container *ngIf="activeTab === 'transactions'">
+            <!-- Statistics -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h5>Total Transactions</h5>
+                    <h2>{{transactions.length}}</h2>
+                    <span class="positive">▲ +12%</span>
+                </div>
+                <div class="summary-card">
+                    <h5>Approved</h5>
+                    <h2>{{approvedCount}}</h2>
+                    <span class="approved">98.8%</span>
+                </div>
+                <div class="summary-card">
+                    <h5>Under Review</h5>
+                    <h2>{{reviewCount}}</h2>
+                    <span class="review">Medium Risk</span>
+                </div>
+                <div class="summary-card">
+                    <h5>Blocked</h5>
+                    <h2>{{blockedCount}}</h2>
+                    <span class="blocked">High Risk</span>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <input
+                    type="text"
+                    [(ngModel)]="search" (ngModelChange)="applyFilters()" aria-label="Search transactions"
+                    placeholder="Search Transaction ID / Customer">
+
+                <select [(ngModel)]="status" (ngModelChange)="applyFilters()" aria-label="Filter by status">
+                    <option value="All">All Status</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Review">Review</option>
+                    <option value="Blocked">Blocked</option>
+                    <option value="Verification Required">Verification Required</option>
+                    <option value="OWNER_VERIFIED">Owner Verified</option>
+                    <option value="CUSTOMER_REPORTED_FRAUD">Customer Reported Fraud</option>
+                </select>
+
+                <select [(ngModel)]="dateRange" (ngModelChange)="applyFilters()" aria-label="Filter by date">
+                    <option value="All">All Dates</option>
+                    <option value="Today">Today</option>
+                    <option value="Yesterday">Yesterday</option>
+                    <option value="This Week">This Week</option>
+                    <option value="This Month">This Month</option>
+                </select>
+            </div>
+
+            <!-- Table -->
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><button class="sort-button" (click)="sortBy('id')">Transaction ID</button></th>
+                            <th><button class="sort-button" (click)="sortBy('customer')">Customer</button></th>
+                            <th>Card</th>
+                            <th><button class="sort-button" (click)="sortBy('amount')">Amount</button></th>
+                            <th>Location</th>
+                            <th><button class="sort-button" (click)="sortBy('timestamp')">Time</button></th>
+                            <th>Risk</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of pagedTransactions">
+                            <td><button class="link-button" (click)="view(item)">{{item.id}}</button></td>
+                            <td>{{item.customer}}</td>
+                            <td>{{item.card}}</td>
+                            <td>{{item.amount | currency:'INR'}}</td>
+                            <td>{{item.location}}</td>
+                            <td>{{item.timestamp | date:'short'}}</td>
+                            <td><span [ngClass]="['status-pill', 'risk-' + item.risk.toLowerCase()]">{{item.risk}}</span></td>
+                            <td><span [ngClass]="['status-pill', getStatusClass(item.status)]">{{item.status}}</span></td>
+                        </tr>
+                        <tr *ngIf="!pagedTransactions.length">
+                            <td colspan="8" class="empty-state">No transactions match the selected filters.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination" *ngIf="sortedTransactions.length">
+                <button (click)="changePage(-1)" [disabled]="currentPage === 1">Previous</button>
+                <span>Page {{currentPage}} of {{pageCount}}</span>
+                <button (click)="changePage(1)" [disabled]="currentPage === pageCount">Next</button>
+            </div>
+        </ng-container>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: IMMUTABLE AUDIT LOGS VIEW               -->
+        <!-- ============================================== -->
+        <ng-container *ngIf="activeTab === 'audit-logs'">
+            <div class="summary-cards" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="summary-card">
+                    <h5>Total Immutable Audit Logs</h5>
+                    <h2>{{totalAuditLogs}}</h2>
+                    <span class="positive">Security & Compliance</span>
+                </div>
+                <div class="summary-card">
+                    <h5>Current Page Events</h5>
+                    <h2>{{filteredAuditLogs.length}}</h2>
+                    <span class="approved">Active Filter</span>
+                </div>
+                <div class="summary-card">
+                    <h5>Audit Integrity</h5>
+                    <h2>100%</h2>
+                    <span class="positive">Append-Only / Secure</span>
+                </div>
+            </div>
+
+            <!-- Audit Logs Toolbar -->
+            <div class="toolbar" style="grid-template-columns: 1fr auto;">
+                <input
+                    type="text"
+                    [(ngModel)]="auditSearch"
+                    aria-label="Search audit logs"
+                    placeholder="Search Event Type / Tx Ref / Customer / Action / Rule...">
+                <button type="button" class="export-btn" (click)="loadAuditLogs()" [disabled]="loadingAuditLogs" style="min-width: 140px; padding: 10px 16px;">
+                    {{ loadingAuditLogs ? 'Refreshing...' : '🔄 Refresh Logs' }}
+                </button>
+            </div>
+
+            <!-- Audit Logs Table -->
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event Type</th>
+                            <th>Tx Reference</th>
+                            <th>Customer / User</th>
+                            <th>Card</th>
+                            <th>Action Taken</th>
+                            <th>Risk / Score</th>
+                            <th>Triggered Rules</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let log of filteredAuditLogs">
+                            <td>{{log.timestamp | date:'short'}}</td>
+                            <td><span [ngClass]="['audit-badge', getAuditBadgeClass(log.eventType)]">{{log.eventType}}</span></td>
+                            <td style="font-family: monospace; font-size: 12px; color: #38bdf8;">{{log.transactionRef || 'N/A'}}</td>
+                            <td>{{log.customerName || ('User #' + log.userId) || 'System'}}</td>
+                            <td>{{log.cardLast4 ? ('**** ' + log.cardLast4) : '—'}}</td>
+                            <td><span class="status-pill" [style.color]="'#e2e8f0'">{{log.actionTaken || 'LOGGED'}}</span></td>
+                            <td>{{log.riskScore !== null && log.riskScore !== undefined ? (log.riskScore + '/100') : '—'}}</td>
+                            <td style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: #fca5a5;">
+                                {{log.triggeredRules || 'None'}}
+                            </td>
+                            <td>
+                                <button type="button" class="link-button" (click)="viewAuditLog(log)">Inspect</button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="!filteredAuditLogs.length && !loadingAuditLogs">
+                            <td colspan="9" class="empty-state">No audit logs found.</td>
+                        </tr>
+                        <tr *ngIf="loadingAuditLogs">
+                            <td colspan="9" class="empty-state">Loading immutable audit logs...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination" *ngIf="totalAuditLogs > 0">
+                <button (click)="changeAuditPage(-1)" [disabled]="auditPage === 0 || loadingAuditLogs">Previous</button>
+                <span>Page {{auditPage + 1}} of {{auditPageCount}} (Total: {{totalAuditLogs}})</span>
+                <button (click)="changeAuditPage(1)" [disabled]="(auditPage + 1) >= auditPageCount || loadingAuditLogs">Next</button>
+            </div>
+        </ng-container>
+
+        <!-- Transaction Detail Modal -->
+        <div class="detail-modal" *ngIf="selected" role="dialog" aria-modal="true" aria-label="Transaction details">
+            <div class="detail-panel">
+                <button class="close-button" (click)="selected = null" aria-label="Close transaction details">×</button>
+                <h2>{{selected.id}}</h2>
+                <p>{{selected.customer}} · {{selected.location}}</p>
+                <dl>
+                    <dt>Amount</dt><dd>{{selected.amount | currency:'INR'}}</dd>
+                    <dt>Risk score</dt><dd>{{selected.riskScore}} / 100</dd>
+                    <dt>Status</dt><dd>{{selected.status}}</dd>
+                    <dt>Processed</dt><dd>{{selected.timestamp | date:'medium'}}</dd>
+                    <dt *ngIf="selected.reasons?.length">AI Risk Factors</dt>
+                    <dd *ngIf="selected.reasons?.length" style="color: #fca5a5; font-size: 13px;">
+                        <ul style="margin: 0; padding-left: 16px;">
+                            <li *ngFor="let r of selected.reasons">{{r}}</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Audit Log Detail Modal -->
+        <div class="detail-modal" *ngIf="selectedAuditLog" role="dialog" aria-modal="true" aria-label="Audit log details">
+            <div class="detail-panel" style="max-width: 600px; width: 100%;">
+                <button class="close-button" (click)="closeAuditLogModal()" aria-label="Close audit details">×</button>
+                <h2>Audit Event #{{selectedAuditLog.id}}</h2>
+                <p>
+                    <span [ngClass]="['audit-badge', getAuditBadgeClass(selectedAuditLog.eventType)]">{{selectedAuditLog.eventType}}</span>
+                    · {{selectedAuditLog.timestamp | date:'medium'}}
+                </p>
+                <dl>
+                    <dt>Transaction Ref</dt><dd style="font-family: monospace; color: #38bdf8;">{{selectedAuditLog.transactionRef || 'N/A'}}</dd>
+                    <dt>Customer / User ID</dt><dd>{{selectedAuditLog.customerName || ('User #' + selectedAuditLog.userId) || 'System / Automated'}}</dd>
+                    <dt>Card Last 4</dt><dd>{{selectedAuditLog.cardLast4 ? ('**** **** **** ' + selectedAuditLog.cardLast4) : 'N/A'}}</dd>
+                    <dt>Action Taken</dt><dd><strong style="color: #f8fafc;">{{selectedAuditLog.actionTaken || 'LOGGED'}}</strong></dd>
+                    <dt>Risk Score</dt><dd>{{selectedAuditLog.riskScore !== null && selectedAuditLog.riskScore !== undefined ? (selectedAuditLog.riskScore + ' / 100') : 'N/A'}}</dd>
+                    <dt>ML Probability</dt><dd>{{selectedAuditLog.mlProbability !== null && selectedAuditLog.mlProbability !== undefined ? ((selectedAuditLog.mlProbability * 100 | number:'1.1-2') + '%') : 'N/A'}}</dd>
+                    <dt>Triggered Rules</dt>
+                    <dd style="color: #fca5a5; font-size: 13px;">{{selectedAuditLog.triggeredRules || 'None'}}</dd>
+                    <dt>Client IP / Agent</dt>
+                    <dd style="font-size: 12px; color: #94a3b8; font-family: monospace;">
+                        IP: {{selectedAuditLog.clientIp || '127.0.0.1'}} | Agent: {{selectedAuditLog.userAgent || 'Web Client'}}
+                    </dd>
+                    <dt>Audit Details</dt>
+                    <dd style="font-size: 13px; color: #cbd5e1; background: #0f172a; padding: 10px; border-radius: 6px; border: 1px solid #334155; white-space: pre-wrap;">
+                        {{selectedAuditLog.details || 'No additional sanitized metadata.'}}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Real-Time New Transaction Process Modal -->
+        <div class="detail-modal" *ngIf="showNewTxModal" role="dialog" aria-modal="true" aria-label="Process New Transaction">
+            <div class="detail-panel" style="max-width: 540px; width: 100%;">
+                <button class="close-button" (click)="closeNewTxModal()" aria-label="Close modal">×</button>
+                <h2>⚡ Process Live Transaction</h2>
+                <p style="color: #94a3b8; font-size: 13px; margin-bottom: 16px;">Submit a new card transaction to evaluate it against the AI Shield Hybrid Fraud Engine in real-time.</p>
+
+                <!-- Quick Presets -->
+                <div style="display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;">
+                    <button type="button" (click)="setTxPreset('safe')" style="background: #1e293b; color: #34d399; border: 1px solid #059669; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;">☕ Safe Retail (₹2.4K)</button>
+                    <button type="button" (click)="setTxPreset('crypto')" style="background: #1e293b; color: #f87171; border: 1px solid #dc2626; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;">🪙 High-Risk Crypto (₹1.4L)</button>
+                    <button type="button" (click)="setTxPreset('travel')" style="background: #1e293b; color: #fbbf24; border: 1px solid #d97706; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;">✈️ Velocity Travel (₹68K)</button>
+                    <button type="button" (click)="setTxPreset('high')" style="background: #1e293b; color: #c084fc; border: 1px solid #9333ea; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;">💎 Critical Spike (₹2.2L)</button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">Cardholder Name</label>
+                        <input type="text" [(ngModel)]="newCustomer" style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 13px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">Card Last 4</label>
+                        <input type="text" [(ngModel)]="newCard" maxlength="4" style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 13px;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">Amount (₹)</label>
+                        <input type="number" [(ngModel)]="newAmount" style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #38bdf8; font-size: 14px; font-weight: bold;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">Merchant Category</label>
+                        <select [(ngModel)]="newCategory" style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 13px;">
+                            <option value="RETAIL">RETAIL</option>
+                            <option value="ELECTRONICS">ELECTRONICS</option>
+                            <option value="CRYPTO">CRYPTO</option>
+                            <option value="TRAVEL">TRAVEL</option>
+                            <option value="JEWELRY">JEWELRY</option>
+                            <option value="GAMBLING">GAMBLING</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">Merchant Name</label>
+                        <input type="text" [(ngModel)]="newMerchant" style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 13px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">Location</label>
+                        <input type="text" [(ngModel)]="newLocation" style="width: 100%; padding: 8px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 13px;">
+                    </div>
+                </div>
+
+                <div *ngIf="txSuccessMessage" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 16px;">
+                    {{ txSuccessMessage }}
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" (click)="closeNewTxModal()" style="padding: 8px 16px; background: #334155; color: #cbd5e1; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+                    <button type="button" (click)="submitNewTransaction()" [disabled]="isProcessingTx" style="padding: 8px 20px; background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                        {{ isProcessingTx ? 'Evaluating with AI...' : 'Submit & Analyze Fraud' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <app-chatbot></app-chatbot>
+</div>

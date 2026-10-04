@@ -1,0 +1,125 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+  <app-navbar></app-navbar>
+
+  <div class="user-tx-page">
+
+    <div class="page-title-row">
+      <div>
+        <h1>My Card Transactions</h1>
+        <p>Complete statement of card charges, verification decisions, and live risk statuses.</p>
+      </div>
+      <div class="status-badge" *ngIf="disputeMessage">
+        {{ disputeMessage }}
+      </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="tx-toolbar">
+      <input type="text" [(ngModel)]="search" placeholder="Search merchant, ID, or city..." class="search-input">
+      <select [(ngModel)]="statusFilter" class="filter-select">
+        <option value="All">All Transaction Statuses</option>
+        <option value="Approved">Approved</option>
+        <option value="OWNER_VERIFIED">Owner Verified</option>
+        <option value="Verification Required">Verification Required</option>
+        <option value="CUSTOMER_REPORTED_FRAUD">Disputed / Fraud</option>
+      </select>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="table-card">
+      <table class="user-tx-table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Merchant / Outlet</th>
+            <th>Date & Time</th>
+            <th>Card Used</th>
+            <th>Location</th>
+            <th>Amount</th>
+            <th>Security Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tx of filteredTransactions" (click)="selectTx(tx)">
+            <td><code>{{ tx.id }}</code></td>
+            <td><strong>{{ tx.merchantName || 'Retail Outlet' }}</strong></td>
+            <td>{{ tx.timestamp | date:'mediumDate' }} {{ tx.timestamp | date:'shortTime' }}</td>
+            <td>{{ tx.card }}</td>
+            <td>{{ tx.location }}</td>
+            <td class="amount-cell">{{ tx.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+            <td>
+              <span class="badge-status" [ngClass]="{
+                'status-approved': tx.status === 'Approved' || tx.status === 'OWNER_VERIFIED',
+                'status-pending': tx.status === 'Verification Required',
+                'status-blocked': tx.status === 'Blocked' || tx.status === 'CUSTOMER_REPORTED_FRAUD'
+              }">
+                {{ tx.status }}
+              </span>
+            </td>
+            <td>
+              <button type="button" class="btn-inspect" (click)="selectTx(tx); $event.stopPropagation()">
+                Details
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="!filteredTransactions.length">
+            <td colspan="8" class="empty-state">No transactions match your search.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Transaction Detail & Dispute Modal -->
+    <div class="modal-overlay" *ngIf="selectedTx" (click)="selectedTx = null">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        
+        <div class="modal-header">
+          <div>
+            <h2>Transaction Details</h2>
+            <code style="color: #38bdf8;">{{ selectedTx.id }}</code>
+          </div>
+          <button (click)="selectedTx = null" class="btn-close-modal">✕</button>
+        </div>
+
+        <div class="modal-body-grid">
+          <div class="modal-field">
+            <small>Merchant</small>
+            <strong>{{ selectedTx.merchantName || 'Retail Outlet' }}</strong>
+          </div>
+          <div class="modal-field">
+            <small>Amount Charged</small>
+            <strong style="color: #38bdf8; font-size: 18px;">{{ selectedTx.amount | currency:'INR':'symbol':'1.0-0' }}</strong>
+          </div>
+          <div class="modal-field">
+            <small>Location</small>
+            <strong>{{ selectedTx.location }}</strong>
+          </div>
+          <div class="modal-field">
+            <small>Card Masked</small>
+            <strong>{{ selectedTx.card }}</strong>
+          </div>
+          <div class="modal-field">
+            <small>Risk Evaluation</small>
+            <strong [style.color]="selectedTx.risk === 'High' ? '#ef4444' : '#4ade80'">{{ selectedTx.riskScore }}/100 ({{ selectedTx.risk }} Risk)</strong>
+          </div>
+          <div class="modal-field">
+            <small>Status</small>
+            <strong>{{ selectedTx.status }}</strong>
+          </div>
+        </div>
+
+        <div class="modal-actions" *ngIf="selectedTx.status !== 'CUSTOMER_REPORTED_FRAUD'">
+          <button type="button" class="btn-dispute" (click)="disputeTransaction(selectedTx)">
+            🚨 Dispute This Charge (Report Unauthorized)
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+<app-chatbot></app-chatbot>

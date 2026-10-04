@@ -1,0 +1,569 @@
+<div class="auth-page">
+
+  <!-- Ambient Security Grid & Background Glows -->
+  <div class="cyber-background" aria-hidden="true">
+    <div class="grid-overlay"></div>
+    <div class="glow-orb orb-primary"></div>
+    <div class="glow-orb orb-secondary"></div>
+    <div class="glow-orb orb-accent"></div>
+  </div>
+
+  <div class="auth-container">
+
+    <!-- ======================================================== -->
+    <!-- LEFT / BRAND SECTION                                     -->
+    <!-- ======================================================== -->
+    <section class="brand-showcase">
+      
+      <div class="brand-header">
+        <div class="shield-logo-wrap">
+          <div class="shield-glow"></div>
+          <svg class="shield-svg" width="38" height="38" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L3 7V12C3 17.52 6.84 22.74 12 24C17.16 22.74 21 17.52 21 12V7L12 2Z" fill="url(#shieldGrad)" stroke="#38bdf8" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M9 12L11 14L15 10" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="shieldGrad" x1="3" y1="2" x2="21" y2="24" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0f2b48" stop-opacity="0.9"/>
+                <stop offset="1" stop-color="#071526" stop-opacity="0.95"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-title-wrap">
+          <h1 class="brand-name">AI Shield</h1>
+          <span class="brand-tag">ENTERPRISE SECURITY</span>
+        </div>
+      </div>
+
+      <div class="brand-hero">
+        <h2 class="hero-headline">AI-Powered Card Fraud Protection</h2>
+        <p class="hero-subtext">
+          Protect every transaction with intelligent fraud detection and real-time verification.
+        </p>
+      </div>
+
+      <!-- Trust Indicators -->
+      <div class="trust-indicators">
+        
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="trust-text">
+            <span class="trust-title">AI Fraud Detection</span>
+            <span class="trust-desc">Ensemble Random Forest ML scoring in &lt;0.8ms</span>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <div class="trust-text">
+            <span class="trust-title">Real-Time Alerts</span>
+            <span class="trust-desc">Instant geo-velocity anomaly detection</span>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <div class="trust-text">
+            <span class="trust-title">Multi-Factor Security</span>
+            <span class="trust-desc">Cryptographic 2FA OTP & FIDO2 WebAuthn</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="brand-footer-badges">
+        <span class="badge-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Bank-Grade 256-Bit TLS
+        </span>
+        <span class="badge-dot">•</span>
+        <span class="badge-item">Zero-Trust Architecture</span>
+        <span class="badge-dot">•</span>
+        <span class="badge-item">PCI-DSS Compliant</span>
+      </div>
+
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- RIGHT / AUTHENTICATION CARD                              -->
+    <!-- ======================================================== -->
+    <main class="auth-card-panel">
+
+      <div class="auth-card">
+
+        <!-- Status Toast Banner -->
+        <div *ngIf="statusMessage" class="status-banner" [ngClass]="messageType" role="alert" aria-live="polite">
+          <span class="status-icon" *ngIf="messageType === 'error'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </span>
+          <span class="status-icon" *ngIf="messageType === 'success'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <span class="status-icon" *ngIf="messageType === 'info'">
+            <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </span>
+          <span class="status-text">{{ statusMessage }}</span>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- VIEW 1: STEP 1 - CREDENTIALS SIGN IN                 -->
+        <!-- ==================================================== -->
+        <div *ngIf="mode === 'LOGIN' && !isOtpStep" class="auth-form-view">
+          
+          <div class="card-header">
+            <div class="card-badge">
+              <span class="pulse-dot"></span>
+              SECURE ACCESS PORTAL
+            </div>
+            <h2 class="card-title">Welcome back</h2>
+            <p class="card-subtitle">Sign in to your secure account</p>
+          </div>
+
+          <form class="auth-form" (ngSubmit)="submitLogin()" #loginForm="ngForm">
+            
+            <div class="form-group">
+              <label for="login-identifier">Email or Registered Mobile Number</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </span>
+                <input
+                  id="login-identifier"
+                  type="text"
+                  name="identifier"
+                  [(ngModel)]="identifier"
+                  placeholder="name@example.com or +91 98765 43210"
+                  required
+                  autocomplete="username"
+                  [disabled]="authState === 'LOGIN_SUBMITTING'"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-row">
+                <label for="login-password">Password</label>
+                <button type="button" class="text-link-btn" (click)="switchMode('FORGOT_PASSWORD')">
+                  Forgot password?
+                </button>
+              </div>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input
+                  id="login-password"
+                  [type]="hidePassword ? 'password' : 'text'"
+                  name="password"
+                  [(ngModel)]="password"
+                  placeholder="Enter your secure password"
+                  required
+                  autocomplete="current-password"
+                  [disabled]="authState === 'LOGIN_SUBMITTING'"
+                />
+                <button type="button" class="eye-toggle-btn" (click)="hidePassword = !hidePassword" aria-label="Toggle password visibility">
+                  <svg *ngIf="hidePassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="!hidePassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row-remember">
+              <label class="checkbox-container">
+                <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" />
+                <span class="custom-check"></span>
+                <span class="checkbox-text">Remember this device</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-primary-submit" [disabled]="authState === 'LOGIN_SUBMITTING'">
+              <span *ngIf="authState !== 'LOGIN_SUBMITTING'">Sign In & Continue</span>
+              <span *ngIf="authState === 'LOGIN_SUBMITTING'" class="btn-loading-content">
+                <svg class="spin-sm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                Signing you in...
+              </span>
+            </button>
+
+            <!-- Optional WebAuthn Passkey Button -->
+            <div *ngIf="isPasskeySupported" class="passkey-divider">
+              <span>or</span>
+            </div>
+            <button
+              *ngIf="isPasskeySupported"
+              type="button"
+              class="btn-passkey"
+              (click)="authenticateWithPasskey()"
+              [disabled]="isBiometricChecking || authState === 'LOGIN_SUBMITTING'"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0c0 4.08 1.48 7.82 3.96 10.74"/>
+              </svg>
+              <span>{{ isBiometricChecking ? 'Scanning Biometrics...' : 'Use Passkey / Biometric' }}</span>
+            </button>
+
+          </form>
+
+          <div class="card-footer-switch">
+            <span>Don't have an account?</span>
+            <button type="button" class="btn-switch-mode" (click)="switchMode('REGISTER')">
+              Create account
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- VIEW 2: STEP 2 - TWO-STEP 2FA OTP IDENTITY VERIFICATION -->
+        <!-- ==================================================== -->
+        <div *ngIf="isOtpStep" class="auth-form-view 2fa-view">
+
+          <!-- 2-Step Progression Tracker -->
+          <div class="step-tracker">
+            <div class="step-bubble step-done">
+              <span class="step-icon">✓</span>
+              <span class="step-label">Step 1: Credentials</span>
+            </div>
+            <div class="step-line active"></div>
+            <div class="step-bubble step-active">
+              <span class="step-num">2</span>
+              <span class="step-label">Step 2: Verify Identity</span>
+            </div>
+          </div>
+
+          <div class="card-header center-align">
+            <div class="radar-shield-icon">
+              <div class="pulse-ring"></div>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M12 8v4"/>
+                <circle cx="12" cy="16" r="1"/>
+              </svg>
+            </div>
+            <h2 class="card-title">Verify it's really you</h2>
+            <p class="card-subtitle">
+              We sent a one-time verification code to your registered mobile number.
+            </p>
+            <div class="destination-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <span>{{ destinationMasked }}</span>
+            </div>
+
+            <!-- Real SMS OTP Dispatch Indicator -->
+            <div class="sms-security-badge" title="Live SMS OTP dispatched via SMS provider">
+              <span class="badge-icon">🔒</span>
+              <span class="badge-label">Real SMS OTP Dispatched</span>
+              <span class="badge-hint">(Check your phone SMS)</span>
+            </div>
+          </div>
+
+          <!-- If Password Reset Mode: Prompt for New Password -->
+          <div *ngIf="mode === 'FORGOT_PASSWORD'" class="form-group reset-pass-wrap">
+            <label for="new-password">Enter New Secure Password</label>
+            <div class="input-wrap">
+              <input
+                id="new-password"
+                [type]="newHidePassword ? 'password' : 'text'"
+                name="newPassword"
+                [(ngModel)]="newPassword"
+                placeholder="Enter new password (min 6 characters)"
+                required
+              />
+              <button type="button" class="eye-toggle-btn" (click)="newHidePassword = !newHidePassword">
+                <svg *ngIf="newHidePassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg *ngIf="!newHidePassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- 6-Box Discrete OTP Input -->
+          <div class="otp-boxes-wrapper" (paste)="onOtpPaste($event)">
+            <input
+              #otpInput
+              *ngFor="let digit of otpDigits; let i = index"
+              type="text"
+              inputmode="numeric"
+              maxlength="1"
+              pattern="[0-9]*"
+              class="otp-digit-box"
+              [value]="otpDigits[i]"
+              (input)="onOtpInput(i, $event)"
+              (keydown)="onOtpKeyDown(i, $event)"
+              [disabled]="authState === 'OTP_VERIFYING' || authState === 'OTP_LOCKED'"
+              aria-label="OTP digit {{ i + 1 }}"
+            />
+          </div>
+
+          <div class="otp-meta-row">
+            <span class="expiry-counter" *ngIf="expirySeconds > 0 && authState !== 'OTP_EXPIRED'">
+              Code expires in <strong>{{ formatSeconds(expirySeconds) }}</strong>
+            </span>
+            <span class="expiry-counter expired" *ngIf="expirySeconds <= 0 || authState === 'OTP_EXPIRED'">
+              Code expired. Please request a new code.
+            </span>
+          </div>
+
+          <!-- Verify Action Button -->
+          <button
+            type="button"
+            class="btn-primary-submit"
+            (click)="verifyOtp()"
+            [disabled]="authState === 'OTP_VERIFYING' || authState === 'OTP_LOCKED'"
+          >
+            <span *ngIf="authState !== 'OTP_VERIFYING' && authState !== 'AUTHENTICATED'">Verify & Continue</span>
+            <span *ngIf="authState === 'OTP_VERIFYING'" class="btn-loading-content">
+              <svg class="spin-sm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+              Verifying identity...
+            </span>
+            <span *ngIf="authState === 'AUTHENTICATED'" class="btn-loading-content">
+              ✓ Identity Verified! Redirecting...
+            </span>
+          </button>
+
+          <!-- Resend / Back Controls -->
+          <div class="otp-footer-actions">
+            <button
+              type="button"
+              class="resend-link-btn"
+              (click)="resendOtp()"
+              [disabled]="resendCooldown > 0 || authState === 'OTP_VERIFYING' || authState === 'OTP_LOCKED'"
+            >
+              <span *ngIf="resendCooldown > 0">Resend available in {{ formatSeconds(resendCooldown) }}</span>
+              <span *ngIf="resendCooldown <= 0" class="resend-active">↻ Resend Code</span>
+            </button>
+
+            <button type="button" class="back-link-btn" (click)="backToCredentials()">
+              ← Back to Sign In
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- VIEW 3: REGISTRATION CARD                            -->
+        <!-- ==================================================== -->
+        <div *ngIf="mode === 'REGISTER' && !isOtpStep" class="auth-form-view">
+          
+          <div class="card-header">
+            <div class="card-badge">
+              <span class="pulse-dot"></span>
+              NEW CARDHOLDER
+            </div>
+            <h2 class="card-title">Create account</h2>
+            <p class="card-subtitle">Register for AI Shield Cardholder Protection</p>
+          </div>
+
+          <form class="auth-form" (ngSubmit)="submitRegister()" #registerForm="ngForm">
+            
+            <div class="form-group">
+              <label for="reg-name">Full Legal Name</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <input
+                  id="reg-name"
+                  type="text"
+                  name="regName"
+                  [(ngModel)]="regName"
+                  placeholder="e.g. Rahul Sharma"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-email">Email Address</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </span>
+                <input
+                  id="reg-email"
+                  type="email"
+                  name="regEmail"
+                  [(ngModel)]="regEmail"
+                  placeholder="name@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-phone">Registered Mobile Number (for 2FA OTP)</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </span>
+                <input
+                  id="reg-phone"
+                  type="tel"
+                  name="regPhone"
+                  [(ngModel)]="regPhone"
+                  placeholder="+91 98111 22334"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-password">Password</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input
+                  id="reg-password"
+                  [type]="regHidePassword ? 'password' : 'text'"
+                  name="regPassword"
+                  [(ngModel)]="regPassword"
+                  placeholder="Min 6 characters"
+                  required
+                />
+                <button type="button" class="eye-toggle-btn" (click)="regHidePassword = !regHidePassword">
+                  <svg *ngIf="regHidePassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="!regHidePassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+
+              <!-- Password Strength Meter -->
+              <div class="strength-meter-wrap" *ngIf="regPassword">
+                <div class="strength-bar-bg">
+                  <div
+                    class="strength-bar-fill"
+                    [style.width.%]="getPasswordStrength().percent"
+                    [style.background-color]="getPasswordStrength().color"
+                  ></div>
+                </div>
+                <span class="strength-label" [style.color]="getPasswordStrength().color">
+                  Strength: {{ getPasswordStrength().level }}
+                </span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary-submit" [disabled]="authState === 'LOGIN_SUBMITTING'">
+              <span *ngIf="authState !== 'LOGIN_SUBMITTING'">Create Account & Send Code</span>
+              <span *ngIf="authState === 'LOGIN_SUBMITTING'" class="btn-loading-content">
+                <svg class="spin-sm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                Creating account...
+              </span>
+            </button>
+
+          </form>
+
+          <div class="card-footer-switch">
+            <span>Already have an account?</span>
+            <button type="button" class="btn-switch-mode" (click)="switchMode('LOGIN')">
+              Sign In
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- VIEW 4: FORGOT PASSWORD / IDENTITY RECOVERY          -->
+        <!-- ==================================================== -->
+        <div *ngIf="mode === 'FORGOT_PASSWORD' && !isOtpStep" class="auth-form-view">
+          
+          <div class="card-header">
+            <div class="card-badge">
+              <span class="pulse-dot"></span>
+              ACCOUNT RECOVERY
+            </div>
+            <h2 class="card-title">Reset password</h2>
+            <p class="card-subtitle">Enter your registered email or mobile to receive a secure recovery code.</p>
+          </div>
+
+          <form class="auth-form" (ngSubmit)="submitForgotPassword()">
+            
+            <div class="form-group">
+              <label for="forgot-identifier">Registered Email or Mobile Number</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </span>
+                <input
+                  id="forgot-identifier"
+                  type="text"
+                  name="forgotIdentifier"
+                  [(ngModel)]="forgotIdentifier"
+                  placeholder="name@example.com or +91 98765 43210"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary-submit" [disabled]="authState === 'LOGIN_SUBMITTING'">
+              <span *ngIf="authState !== 'LOGIN_SUBMITTING'">Send Recovery Code</span>
+              <span *ngIf="authState === 'LOGIN_SUBMITTING'" class="btn-loading-content">
+                <svg class="spin-sm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                Dispatching code...
+              </span>
+            </button>
+
+          </form>
+
+          <div class="card-footer-switch">
+            <button type="button" class="back-link-btn" (click)="switchMode('LOGIN')">
+              ← Return to Sign In
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Quick Demo Access (for seamless test credentials) -->
+      <div class="demo-accounts-card" *ngIf="mode === 'LOGIN' && authState === 'LOGIN_IDLE'">
+        <div class="demo-group">
+          <span class="demo-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            ⚡ Quick Sign-In (Dispatches Real SMS OTP):
+          </span>
+          <div class="demo-buttons-row">
+            <button type="button" class="btn-demo-chip instant-admin" (click)="quickLoginAsAdmin()" title="Initiate Login as Admin (Pradeep) - Sends Live SMS OTP">
+              🛡️ Admin (Pradeep)
+            </button>
+            <button type="button" class="btn-demo-chip instant-user" (click)="quickLoginAsCardholder()" title="Initiate Login as Cardholder (Priya) - Sends Live SMS OTP">
+              💳 Cardholder (Priya)
+            </button>
+          </div>
+        </div>
+
+        <div class="demo-group">
+          <span class="demo-title" style="font-size: 10px; color: #64748b;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Or Autofill & Test Step-by-Step 2FA:
+          </span>
+          <div class="demo-buttons-row">
+            <button type="button" class="btn-demo-chip" (click)="identifier = 'pradeep@example.com'; password = 'password123'">
+              🛡️ Autofill Admin
+            </button>
+            <button type="button" class="btn-demo-chip" (click)="identifier = 'priya@example.com'; password = 'password123'">
+              💳 Autofill Cardholder
+            </button>
+            <button type="button" class="btn-demo-chip" (click)="identifier = '+919800000001'; password = 'password123'">
+              📱 Mobile (+91 98000 00001)
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+</div>

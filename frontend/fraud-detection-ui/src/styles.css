@@ -1,0 +1,36 @@
+/* You can add global styles to this file, and also import other style files */
+@import './styles/shared.css';
+
+html {
+    scroll-behavior: smooth;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #040b15 0%, #07111f 45%, #0b1628 100%);
+    color: var(--text);
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+::selection {
+    background: rgba(37, 99, 235, 0.35);
+    color: #f8fafc;
+}
+
+#app-root {
+    min-height: 100vh;
+}

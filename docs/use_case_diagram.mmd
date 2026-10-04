@@ -1,0 +1,136 @@
+flowchart LR
+    %% ==========================================
+    %% AI SHIELD - UML USE CASE DIAGRAM (MERMAID)
+    %% ==========================================
+
+    %% ACTORS
+    subgraph LeftActors [Primary Actors]
+        Cardholder["fa:fa-user Cardholder / User"]
+    end
+
+    subgraph RightActors [Administrative & External Actors]
+        Admin["fa:fa-user-tie Administrator"]
+        SMS["fa:fa-comment-dots SMS / Notification Gateway"]
+        BioDevice["fa:fa-fingerprint Biometric Device / Browser"]
+    end
+
+    %% SYSTEM BOUNDARY
+    subgraph SystemBoundary ["AI Shield — Card Fraud Detection & Step-Up Verification System"]
+
+        subgraph CoreSecurity ["Core Security & Reusable Operations"]
+            UC_Auth(["Authenticate User\n(Credentials / JWT)"])
+            UC_VerifyMobile(["Verify Mobile Number"])
+            UC_BioVerify(["Perform Biometric /\nPasskey Verification"])
+        end
+
+        subgraph CardholderServices ["Cardholder Services"]
+            UC_Register(["Register Account"])
+            UC_UserLogin(["Login to System"])
+            UC_UserDash(["View Cardholder Dashboard"])
+            UC_ManageCards(["Manage Protected Cards\n(Lock/Unlock & Limits)"])
+            UC_UserTx(["View Personal Transactions"])
+            UC_ReceiveAlert(["Receive Fraud Alert"])
+            UC_VerifyTx(["Verify Suspicious Transaction\n(Step-Up)"])
+            UC_ConfirmTx(["Confirm Legitimate Transaction"])
+            UC_ReportFraud(["Report Unauthorized Fraud"])
+            UC_FreezeCard(["Freeze Compromised Card"])
+            UC_History(["View Verification History"])
+            UC_Profile(["Manage User Profile"])
+            UC_Settings(["Configure Security Settings"])
+        end
+
+        subgraph NotificationServices ["Outbound Dispatch Subsystem"]
+            UC_SendOTP(["Send Security OTP"])
+            UC_SendFraudSMS(["Send Fraud Alert SMS"])
+            UC_SendVerifLink(["Send Verification Link"])
+            UC_SendTxAlert(["Send Transaction Alert"])
+        end
+
+        subgraph AdminServices ["Admin & Investigation Operations"]
+            UC_AdminLogin(["Admin Login"])
+            UC_AdminDash(["View Admin Dashboard\n(Operations Center)"])
+            UC_ManageUsers(["Manage Users & Cards"])
+            UC_AdminTx(["View Audited Transactions"])
+            UC_MonitorAlerts(["Monitor Fraud Alerts"])
+            UC_Investigate(["Investigate Fraud Case"])
+            UC_Analytics(["View Analytics & Risk Hotspots"])
+            UC_LiveTrack(["Monitor Live Transactions"])
+            UC_Reports(["Generate Audit Reports\n(CSV / JSON Export)"])
+            UC_AdminSettings(["Manage Fraud Rules & Thresholds"])
+            UC_AuditLogs(["View System Audit Logs"])
+        end
+
+    end
+
+    %% ==========================================
+    %% ASSOCIATIONS (Solid Lines)
+    %% ==========================================
+    Cardholder --- UC_Register
+    Cardholder --- UC_UserLogin
+    Cardholder --- UC_UserDash
+    Cardholder --- UC_ManageCards
+    Cardholder --- UC_UserTx
+    Cardholder --- UC_ReceiveAlert
+    Cardholder --- UC_VerifyTx
+    Cardholder --- UC_History
+    Cardholder --- UC_Profile
+    Cardholder --- UC_Settings
+
+    Admin --- UC_AdminLogin
+    Admin --- UC_AdminDash
+    Admin --- UC_ManageUsers
+    Admin --- UC_AdminTx
+    Admin --- UC_MonitorAlerts
+    Admin --- UC_Investigate
+    Admin --- UC_Analytics
+    Admin --- UC_LiveTrack
+    Admin --- UC_Reports
+    Admin --- UC_AdminSettings
+    Admin --- UC_AuditLogs
+
+    %% External System Associations
+    UC_SendOTP --- SMS
+    UC_SendFraudSMS --- SMS
+    UC_SendVerifLink --- SMS
+    UC_SendTxAlert --- SMS
+    UC_BioVerify --- BioDevice
+
+    %% ==========================================
+    %% <<include>> RELATIONSHIPS (Dashed Arrows)
+    %% ==========================================
+    UC_Register -. "<<include>>" .-> UC_VerifyMobile
+    UC_VerifyMobile -. "<<include>>" .-> UC_SendOTP
+
+    UC_UserLogin -. "<<include>>" .-> UC_Auth
+    UC_AdminLogin -. "<<include>>" .-> UC_Auth
+
+    UC_VerifyTx -. "<<include>>" .-> UC_Auth
+    UC_VerifyTx -. "<<include>>" .-> UC_BioVerify
+    UC_VerifyTx -. "<<include>>" .-> UC_SendVerifLink
+
+    UC_ReceiveAlert -. "<<include>>" .-> UC_SendFraudSMS
+    UC_UserTx -. "<<include>>" .-> UC_SendTxAlert
+
+    UC_Investigate -. "<<include>>" .-> UC_MonitorAlerts
+    UC_Reports -. "<<include>>" .-> UC_AdminTx
+    UC_Analytics -. "<<include>>" .-> UC_AdminTx
+
+    %% ==========================================
+    %% <<extend>> RELATIONSHIPS (Dashed Arrows)
+    %% ==========================================
+    UC_ConfirmTx -. "<<extend>>" .-> UC_VerifyTx
+    UC_ReportFraud -. "<<extend>>" .-> UC_VerifyTx
+    UC_ReportFraud -. "<<extend>>" .-> UC_ReceiveAlert
+    UC_FreezeCard -. "<<extend>>" .-> UC_ReportFraud
+
+    %% STYLING
+    classDef default fill:#ffffff,stroke:#2b5797,stroke-width:1.5px,color:#0f2537;
+    classDef actorStyle fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e,font-weight:bold;
+    classDef highlightCase fill:#fef08a,stroke:#ca8a04,stroke-width:1.8px,color:#713f12,font-weight:bold;
+    classDef dangerCase fill:#fee2e2,stroke:#dc2626,stroke-width:1.8px,color:#7f1d1d,font-weight:bold;
+    classDef coreCase fill:#f1f5f9,stroke:#475569,stroke-width:1.5px,color:#1e293b;
+
+    class Cardholder,Admin,SMS,BioDevice actorStyle;
+    class UC_VerifyTx highlightCase;
+    class UC_ReportFraud,UC_FreezeCard,UC_Investigate dangerCase;
+    class UC_Auth,UC_VerifyMobile,UC_BioVerify coreCase;
